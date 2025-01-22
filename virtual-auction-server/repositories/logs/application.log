@@ -1,0 +1,8 @@
+2025-01-22 14:58:41 [main] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-22 14:58:50 [main] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:51272
+2025-01-22 14:58:50 [main] INFO  auction.stubs.UserServiceStub - Received request: {"action":"signUp","name":"JohnDoe","password":"$2a$10$Hmd3vxzY5AMd42RNvuqQRe9APRt.mUYK7dGZDVJme7NDBwEbXY.Ji"}
+2025-01-22 14:58:50 [main] INFO  auction.repositories.UserRepository - User successfully added: auction.models.User@29215f06
+2025-01-22 14:58:50 [main] INFO  auction.repositories.UserRepository - Users successfully saved after adding: a2a7ee29-b473-4cf9-85a1-248ea8ff3a6c
+2025-01-22 14:58:50 [main] INFO  auction.stubs.UserServiceStub - User registered successfully: a2a7ee29-b473-4cf9-85a1-248ea8ff3a6c
+2025-01-22 14:58:50 [main] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"success","message":"a2a7ee29-b473-4cf9-85a1-248ea8ff3a6c"}
+2025-01-22 15:00:06 [main] INFO  auction.stubs.UserServiceStub - Server started on port 8080
