@@ -32,6 +32,20 @@
             <version>2.15.2</version>
         </dependency>
         
+        <!-- Suporte para tipos do pacote java.time, como Duration e Instant -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+
+        <!-- Suporte para tipos de dados do Java 8, como Optional -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        
         <!-- jBCrypt -->
         <dependency>
             <groupId>org.mindrot</groupId>

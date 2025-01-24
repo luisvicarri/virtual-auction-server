@@ -9,7 +9,7 @@ public class User {
     private String name;
     private String hashedPassword;
     
-//    @JsonIgnore
+    @JsonIgnore
     private String plainPassword;
 
     public User() {
