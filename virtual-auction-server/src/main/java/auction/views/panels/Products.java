@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 public class Products extends javax.swing.JPanel {
 
@@ -49,114 +50,74 @@ public class Products extends javax.swing.JPanel {
         ImageIcon originalIcon = imageUtil.createImageIcon("/views/icons/icAdmin.png");
         ImageIcon resizedIcon = imageUtil.resizeIcon(originalIcon, 30, 30);
         lbUser.setIcon(resizedIcon);
-        
+
         originalIcon = imageUtil.createImageIcon("/views/icons/icAdd.png");
         resizedIcon = imageUtil.resizeIcon(originalIcon, 30, 30);
         lbAdd.setIcon(resizedIcon);
     }
 
+    private Item createItem(String title, String description, double reservePrice, Duration duration, String image) {
+        ItemData data = new ItemData(
+                title,
+                description,
+                (reservePrice * 0.1), // Calcula o lance inicial como 10% do preço de reserva
+                reservePrice,
+                duration,
+                image
+        );
+
+        return new Item(
+                data,
+                0.0, // Lance inicial como 0
+                null, // Foto ou outro dado inicial como nulo
+                Optional.empty(), // Outros valores opcionais
+                Optional.empty(),
+                Optional.empty()
+        );
+    }
+
     private List<Item> loadItems() {
         List<Item> products = new ArrayList<>();
 
-        // Produto 1: Livro Harry Potter
-        double reservePrice1 = 600;
-        ItemData data1 = new ItemData(
+        products.add(createItem(
                 "Tênis Nike Air Max",
                 "",
-                (reservePrice1 * 0.1),
-                reservePrice1,
+                600,
                 Duration.ofMinutes(5),
                 "/views/products/imProduct01.png"
-        );
-        Item item1 = new Item(
-                data1,
-                0.0,
-                null,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty()
-        );
-        products.add(item1);
+        ));
 
-        // Produto 2: Tênis Nike Air Max
-        double reservePrice2 = 800;
-        ItemData data2 = new ItemData(
+        products.add(createItem(
                 "Xbox Series S",
                 "",
-                (reservePrice2 * 0.1),
-                reservePrice2,
+                800,
                 Duration.ofHours(1),
                 "/views/products/imProduct02.png"
-        );
-        Item item2 = new Item(
-                data2,
-                0.0,
-                null,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty()
-        );
-        products.add(item2);
+        ));
 
-        // Produto 3: Smartwatch Apple
-        double reservePrice3 = 1200;
-        ItemData data3 = new ItemData(
+        products.add(createItem(
                 "Apple Watch Series 10",
                 "",
-                (reservePrice3 * 0.1),
-                reservePrice3,
+                1200,
                 Duration.ofHours(2),
                 "/views/products/imProduct03.png"
-        );
-        Item item3 = new Item(
-                data3,
-                0.0,
-                null,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty()
-        );
-        products.add(item3);
+        ));
 
-        // Produto 4: Fone de Ouvido Bluetooth
-        double reservePrice4 = 300;
-        ItemData data4 = new ItemData(
+        products.add(createItem(
                 "iPhone 15",
                 "",
-                (reservePrice4 * 0.1),
-                reservePrice4,
+                900,
                 Duration.ofMinutes(30),
                 "/views/products/imProduct04.png"
-        );
-        Item item4 = new Item(
-                data4,
-                0.0,
-                null,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty()
-        );
-        products.add(item4);
+        ));
 
-        // Produto 4: Fone de Ouvido Bluetooth
-        double reservePrice5 = 300;
-        ItemData data5 = new ItemData(
+        products.add(createItem(
                 "Rolex",
                 "",
-                (reservePrice5 * 0.1),
-                reservePrice5,
+                1300,
                 Duration.ofMinutes(30),
                 "/views/products/imProduct05.png"
-        );
-        Item item5 = new Item(
-                data5,
-                0.0,
-                null,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty()
-        );
-        products.add(item5);
+        ));
 
         return products;
     }
@@ -170,7 +131,7 @@ public class Products extends javax.swing.JPanel {
 
         int totalRows = (int) Math.ceil((double) items.size() / colCount);
 
-        // Ajusta o tamanho do painel "auction"
+        // Ajusta o tamanho do painel "productsDisplay"
         int panelWidth = colCount * (templateWidth + colSpacing) - colSpacing;
         int panelHeight = totalRows * (templateHeight + rowSpacing) - rowSpacing;
         productsDisplay.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -183,7 +144,6 @@ public class Products extends javax.swing.JPanel {
 
             // Preenche os dados no template
             template.getLbTitle().setText(item.getData().getTitle());
-
             template.getLbCurrentBid().setText("Current Bid: " + String.valueOf(item.getCurrentBid()));
             template.getLbOpenningBid().setText("Openning Bid: " + String.valueOf(item.getOpeningBid()));
             template.getLbReservePrice().setText("Reserve Price: " + String.valueOf(item.getData().getReservePrice()));
@@ -199,6 +159,23 @@ public class Products extends javax.swing.JPanel {
             ImageIcon resizedIcon = imageUtil.resizeIcon(originalIcon, 263, 250);
             template.getLbPhoto().setIcon(resizedIcon);
 
+            // Adiciona um listener à label de bid
+            JLabel bidNowLabel = template.getLbBidNow();
+
+            // Associa o item à label usando putClientProperty
+            bidNowLabel.putClientProperty("item", item);
+
+            bidNowLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    JLabel clickedLabel = (JLabel) e.getSource();
+                    Item associatedItem = (Item) clickedLabel.getClientProperty("item");
+
+                    // Inicia o leilão para o item clicado
+                    startAuctionForItem(associatedItem);
+                }
+            });
+
             // Calcula a posição
             int x = (i % colCount) * (templateWidth + colSpacing);
             int y = (i / colCount) * (templateHeight + rowSpacing);
@@ -206,14 +183,18 @@ public class Products extends javax.swing.JPanel {
             // Define a posição e o tamanho do template
             template.setBounds(x, y, templateWidth, templateHeight);
 
-            // Adiciona o template ao painel "auction"
+            // Adiciona o template ao painel "productsDisplay"
             productsDisplay.add(template);
         }
 
         // Atualiza o painel
         productsDisplay.revalidate();
         productsDisplay.repaint();
+    }
 
+    private void startAuctionForItem(Item item) {
+        System.out.println("Leilão iniciado para o item: " + item.getData().getTitle());
+        // Adicione aqui a lógica para iniciar o leilão
     }
 
     @SuppressWarnings("unchecked")
