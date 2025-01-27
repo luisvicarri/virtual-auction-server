@@ -1,0 +1,18 @@
+{
+  "950f6990-1982-4d51-9389-73b673f9cd6e" : {
+    "id" : "950f6990-1982-4d51-9389-73b673f9cd6e",
+    "data" : {
+      "title" : "Livro Harry Potter - Edição Limitada",
+      "description" : "Versão limitada do livro Harry Potter e a Pedra Filosofal",
+      "bidIncrement" : 60.0,
+      "reservePrice" : 600.0,
+      "auctionDuration" : 300.000000000
+    },
+    "currentBid" : 0.0,
+    "openingBid" : 0.0,
+    "status" : "CREATED",
+    "auctionStart" : null,
+    "auctionEnd" : null,
+    "winningBidder" : null
+  }
+}

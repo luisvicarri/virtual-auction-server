@@ -1,0 +1,9 @@
+2025-01-27 10:14:27 [main] INFO  auction.repositories.ItemRepository - Item successfully added: Livro Harry Potter - Edição Limitada
+2025-01-27 10:14:27 [main] INFO  auction.repositories.ItemRepository - Items successfully saved after adding: 950f6990-1982-4d51-9389-73b673f9cd6e
+2025-01-27 10:14:27 [main] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-27 10:15:02 [main] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:61747
+2025-01-27 10:15:02 [main] INFO  auction.stubs.UserServiceStub - Received request: {"action":"signUp","name":"JohnDoe","password":"$2a$10$w19BqkEfwfvzq7CrwMPTeedAGXQ9u5n4fj5OwafvqOpGu.PZzEPn2"}
+2025-01-27 10:15:02 [main] INFO  auction.repositories.UserRepository - User successfully added: JohnDoe
+2025-01-27 10:15:02 [main] INFO  auction.repositories.UserRepository - Users successfully saved after adding: 53bcc6fc-9e8d-4175-b95b-fa76abb772a8
+2025-01-27 10:15:02 [main] INFO  auction.stubs.UserServiceStub - User registered successfully: 53bcc6fc-9e8d-4175-b95b-fa76abb772a8
+2025-01-27 10:15:02 [main] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"success","message":"53bcc6fc-9e8d-4175-b95b-fa76abb772a8"}

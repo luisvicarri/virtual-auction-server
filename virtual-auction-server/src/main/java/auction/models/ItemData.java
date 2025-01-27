@@ -9,16 +9,18 @@ public class ItemData {
     private double bidIncrement;
     private double reservePrice;
     private Duration auctionDuration;
+    private String itemImage;
 
     public ItemData() {
     }
 
-    public ItemData(String title, String description, double bidIncrement, double reservePrice, Duration auctionDuration) {
+    public ItemData(String title, String description, double bidIncrement, double reservePrice, Duration auctionDuration, String itemImage) {
         this.title = title;
         this.description = description;
         this.bidIncrement = bidIncrement;
         this.reservePrice = reservePrice;
         this.auctionDuration = auctionDuration;
+        this.itemImage = itemImage;
     }
 
     public String getTitle() {
@@ -59,6 +61,14 @@ public class ItemData {
 
     public void setAuctionDuration(Duration auctionDuration) {
         this.auctionDuration = auctionDuration;
+    }
+
+    public String getItemImage() {
+        return itemImage;
+    }
+
+    public void setItemImage(String itemImage) {
+        this.itemImage = itemImage;
     }
 
 }
