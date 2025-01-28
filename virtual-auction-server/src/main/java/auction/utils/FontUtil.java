@@ -30,14 +30,6 @@ public class FontUtil {
             return null;
         }
     }
-
-//    public void applyFont(JComponent component, Font font) {
-//        if (font != null) {
-//            component.setFont(font);
-//        } else {
-//            System.err.println("A fonte fornecida é nula. O componente não foi modificado.");
-//        }
-//    }
     
     public void applyFont(Map<JComponent, Float> components, String fontPath) {
         try {

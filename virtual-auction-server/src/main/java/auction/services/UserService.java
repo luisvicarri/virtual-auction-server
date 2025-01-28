@@ -1,4 +1,4 @@
-    package auction.services;
+package auction.services;
 
 import auction.models.User;
 import auction.repositories.UserRepository;

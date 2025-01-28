@@ -233,6 +233,11 @@ public class Products extends javax.swing.JPanel {
         add(lbTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(77, 79, 1066, 60));
 
         lbAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lbAdd.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbAddMouseClicked(evt);
+            }
+        });
         add(lbAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(1143, 79, 60, 60));
 
         lbName.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -248,6 +253,11 @@ public class Products extends javax.swing.JPanel {
         lbDashboard.setText("Dashboard");
         lbDashboard.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lbDashboard.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lbDashboard.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbDashboardMouseClicked(evt);
+            }
+        });
         add(lbDashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 15, 120, 30));
 
         lbAuction.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -256,6 +266,11 @@ public class Products extends javax.swing.JPanel {
         lbAuction.setText("Auction");
         lbAuction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lbAuction.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lbAuction.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbAuctionMouseClicked(evt);
+            }
+        });
         add(lbAuction, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 15, 120, 30));
 
         lbProducts.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -272,6 +287,11 @@ public class Products extends javax.swing.JPanel {
         lbOptions.setText("Options");
         lbOptions.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lbOptions.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lbOptions.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbOptionsMouseClicked(evt);
+            }
+        });
         add(lbOptions, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 15, 120, 30));
 
         lbUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -284,6 +304,22 @@ public class Products extends javax.swing.JPanel {
         lbBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/backgrounds/bgProducts.png"))); // NOI18N
         add(lbBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 600));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void lbDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbDashboardMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbDashboardMouseClicked
+
+    private void lbAuctionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAuctionMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbAuctionMouseClicked
+
+    private void lbOptionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbOptionsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbOptionsMouseClicked
+
+    private void lbAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAddMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbAddMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbAdd;
