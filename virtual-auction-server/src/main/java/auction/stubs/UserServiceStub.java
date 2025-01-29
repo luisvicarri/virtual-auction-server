@@ -3,6 +3,8 @@ package auction.stubs;
 import auction.models.dtos.Request;
 import auction.models.dtos.Response;
 import auction.services.UserService;
+import auction.utils.ConfigManager;
+import auction.utils.JsonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,23 +20,22 @@ public class UserServiceStub {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceStub.class);
     private final UserService service;
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = JsonUtil.getObjectMapper();
+    private final int port;
 
     public UserServiceStub(UserService service) {
         this.service = service;
+        this.port = Integer.parseInt(ConfigManager.get("PORT"));
     }
 
-    public void start(int port) throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+    public void startListening() throws IOException {
+        try ( ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Server started on port {}", port);
 
             while (true) {
-                try (Socket clientSocket = serverSocket.accept();
-                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
-
+                try ( Socket clientSocket = serverSocket.accept();  BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));  PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
                     logger.info("Connection established with client: {}", clientSocket.getRemoteSocketAddress());
-                    
+
                     String requestJson = in.readLine();
                     logger.info("Received request: {}", requestJson);
 
@@ -53,29 +54,50 @@ public class UserServiceStub {
             logger.error("Server interrupted", ex);
             throw ex;
         }
-    
+
     }
 
     private String handleRequest(String requestJson) {
         try {
             Request request = mapper.readValue(requestJson, Request.class);
 
-            if ("signUp".equals(request.getAction())) {
+            if ("SIGN-UP".equals(request.getAction())) {
                 UUID id = service.insert(request.getName(), request.getPassword());
                 logger.info("User registered successfully: {}", id.toString());
-                return mapper.writeValueAsString(new Response("success", id.toString()));
-                
-            } else {
-                logger.warn("Unknown action received: {}", request.getAction());
-                return mapper.writeValueAsString(new Response("error", "Unknown action"));
+                return mapper.writeValueAsString(new Response("SUCCESS", id.toString()));
+
             }
+
+            if ("SIGN-IN".equals(request.getAction())) {
+                if (request.getId().isPresent()) {
+                    boolean finded = service.signIn(
+                            request.getId().get(),
+                            request.getName(),
+                            request.getPassword()
+                    );
+                    
+                    if (finded) {
+                        logger.info("User found successfully: {}", request.getId().toString());
+                        return mapper.writeValueAsString(new Response("SUCCESS", request.getId().toString()));
+                    }
+                    
+                    logger.info("Failed to find user: {}", request.getId().toString());
+                    return mapper.writeValueAsString(new Response("FAILED", request.getId().toString()));
+                    
+                }
+
+            }
+
+            logger.warn("Unknown action received: {}", request.getAction());
+            return mapper.writeValueAsString(new Response("FAILED", "Unknown action"));
+
         } catch (IOException e) {
             logger.error("Invalid request format: {}", requestJson, e);
             try {
-                return mapper.writeValueAsString(new Response("error", "Invalid request"));
+                return mapper.writeValueAsString(new Response("FAILED", "Invalid request"));
             } catch (IOException ex) {
                 logger.error("Critical failure serializing error response", ex);
-                return "{\"status\": \"error\", \"message\": \"Critical failure\"}";
+                return "{\"status\": \"FAILED\", \"message\": \"Critical failure\"}";
             }
         }
     }

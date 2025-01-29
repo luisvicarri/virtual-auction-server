@@ -1,12 +1,14 @@
 package auction.repositories;
 
 import auction.models.User;
+import auction.utils.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,7 @@ public class UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
     private final File file = new File("repositories/users/users.json");
     private Map<UUID, User> users = new HashMap<>();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = JsonUtil.getObjectMapper();
 
     public UserRepository() {
         loadUsers();
@@ -30,6 +32,20 @@ public class UserRepository {
         this.users = users;
     }
 
+    public Optional<User> findById(UUID id) {
+        return getUsers().values()
+                .stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst();
+    }
+    
+    public Optional<User> findByUsername(String name) {
+        return getUsers().values()
+                .stream()
+                .filter(user -> user.getName().equals(name))
+                .findFirst();
+    }
+            
     /**
      * (pt-BR) Adiciona um usuário ao repositório e salva no arquivo
      * (en-US) Add a user to the repository and save to file
