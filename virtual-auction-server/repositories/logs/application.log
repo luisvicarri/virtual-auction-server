@@ -1,0 +1,31 @@
+2025-01-29 17:07:16 [Thread-0] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-29 17:07:58 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:53441
+2025-01-29 17:07:58 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-UP","name":"Admin","password":"$2a$10$l2N96W7v71DWxevAAYoH/uBh2jJ8GGUxV9d17IZubMBr6a0xo3nv.","id":null}
+2025-01-29 17:07:58 [Thread-0] INFO  auction.repositories.UserRepository - User successfully added: Admin
+2025-01-29 17:07:58 [Thread-0] INFO  auction.repositories.UserRepository - Users successfully saved after adding: fde5439d-d57e-40f2-8f32-dc85682b05f2
+2025-01-29 17:07:58 [Thread-0] INFO  auction.stubs.UserServiceStub - User registered successfully: fde5439d-d57e-40f2-8f32-dc85682b05f2
+2025-01-29 17:07:58 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"fde5439d-d57e-40f2-8f32-dc85682b05f2","data":null}
+2025-01-29 17:08:09 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:53443
+2025-01-29 17:08:09 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-IN","name":"Admin","password":"Admin@123","id":"fde5439d-d57e-40f2-8f32-dc85682b05f2"}
+2025-01-29 17:08:09 [Thread-0] INFO  auction.stubs.UserServiceStub - User found successfully: Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]
+2025-01-29 17:08:09 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]","data":{"MULTICAST_ADDRESS":"230.0.0.1"}}
+2025-01-29 17:24:28 [Thread-0] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-29 17:24:54 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:53577
+2025-01-29 17:24:54 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-IN","name":"Admin","password":"Admin@123","id":"fde5439d-d57e-40f2-8f32-dc85682b05f2"}
+2025-01-29 17:24:54 [Thread-0] INFO  auction.stubs.UserServiceStub - User found successfully: Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]
+2025-01-29 17:24:54 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]","data":{"MULTICAST_ADDRESS":"230.0.0.1"}}
+2025-01-29 17:25:27 [Thread-0] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-29 17:25:52 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:53610
+2025-01-29 17:25:52 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-IN","name":"Admin","password":"Admin@123","id":"fde5439d-d57e-40f2-8f32-dc85682b05f2"}
+2025-01-29 17:25:52 [Thread-0] INFO  auction.stubs.UserServiceStub - User found successfully: Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]
+2025-01-29 17:25:52 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]","data":{"MULTICAST_ADDRESS":"230.0.0.1"}}
+2025-01-29 17:51:47 [Thread-1] INFO  auction.services.MulticastService - Trying to connect to multicast group at 230.0.0.1:5000
+2025-01-29 17:51:47 [Thread-0] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-29 17:51:47 [Thread-1] INFO  auction.services.MulticastService - Network interface found: Intel(R) Dual Band Wireless-AC 3168
+2025-01-29 17:51:47 [Thread-1] INFO  auction.services.MulticastService - Connection to multicast group 230.0.0.1:5000 succeeded.
+2025-01-29 17:51:47 [Thread-1] INFO  auction.services.MulticastService - Waiting for multicast message...
+2025-01-29 17:52:28 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:53856
+2025-01-29 17:52:28 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-IN","name":"Admin","password":"Admin@123","id":"fde5439d-d57e-40f2-8f32-dc85682b05f2"}
+2025-01-29 17:52:28 [Thread-0] INFO  auction.stubs.UserServiceStub - User found successfully: Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]
+2025-01-29 17:52:28 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]","data":{"MULTICAST_ADDRESS":"230.0.0.1"}}
+2025-01-29 17:52:30 [Thread-1] INFO  auction.services.MulticastService - Message received: CLIENT_CONNECTED

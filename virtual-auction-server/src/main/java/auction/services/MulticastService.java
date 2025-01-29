@@ -1,16 +1,23 @@
-package auction.utils;
+package auction.services;
 
+import auction.utils.ConfigManager;
+import auction.utils.JsonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.*;
-import java.util.Enumeration;
-
-public class MulticastUtil {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MulticastUtil.class);
+public class MulticastService {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(MulticastService.class);
 
     private final String MULTICAST_ADDRESS;
     private final int PORT;
@@ -20,12 +27,12 @@ public class MulticastUtil {
     private InetAddress group;
     private NetworkInterface networkInterface;
 
-    public MulticastUtil() {
+    public MulticastService() {
         this.MULTICAST_ADDRESS = ConfigManager.get("MULTICAST_ADDRESS");
         this.PORT = Integer.parseInt(ConfigManager.get("MULTICAST_PORT"));
         this.mapper = JsonUtil.getObjectMapper();
     }
-
+    
     /**
      * Conecta-se ao grupo multicast.
      */
@@ -164,4 +171,5 @@ public class MulticastUtil {
         }
         return null;
     }
+    
 }
