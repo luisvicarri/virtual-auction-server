@@ -70,15 +70,17 @@ public class UserServiceStub {
 
             if ("SIGN-IN".equals(request.getAction())) {
                 if (request.getId().isPresent()) {
-                    boolean finded = service.signIn(
+                    boolean found = service.signIn(
                             request.getId().get(),
                             request.getName(),
                             request.getPassword()
                     );
                     
-                    if (finded) {
+                    if (found) {
                         logger.info("User found successfully: {}", request.getId().toString());
-                        return mapper.writeValueAsString(new Response("SUCCESS", request.getId().toString()));
+                        Response response = new Response("SUCCESS", request.getId().toString());
+                        response.addData("MULTICAST_ADDRESS", ConfigManager.get("MULTICAST_ADDRESS"));
+                        return mapper.writeValueAsString(response);
                     }
                     
                     logger.info("Failed to find user: {}", request.getId().toString());
