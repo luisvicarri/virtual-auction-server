@@ -11,7 +11,7 @@ public class ServerAuctionApp {
         AppController appController = new AppController();
         Seeding seeding = new Seeding(appController);
         seeding.start();
-        frame = new Frame();
+        frame = new Frame(appController);
         frame.start();
     }
 

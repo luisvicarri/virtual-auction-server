@@ -1,7 +1,9 @@
 package auction.views.panels;
 
+import auction.main.ServerAuctionApp;
 import auction.models.Item;
 import auction.models.ItemData;
+import auction.models.dtos.Response;
 import auction.utils.FontUtil;
 import auction.utils.ImageUtil;
 import auction.views.components.ScrollBarCustom;
@@ -79,41 +81,46 @@ public class Products extends javax.swing.JPanel {
     private List<Item> loadItems() {
         List<Item> products = new ArrayList<>();
 
+        // Adiciona um tênis Nike Air Max, preço de 600, duração de 5 minutos, com imagem
         products.add(createItem(
                 "Tênis Nike Air Max",
-                "",
+                "Tênis esportivo de alta performance da Nike", // Descrição do produto
                 600,
                 Duration.ofMinutes(5),
                 "/views/products/imProduct01.png"
         ));
 
+        // Adiciona um Xbox Series S, preço de 800, duração de 1 hora, com imagem
         products.add(createItem(
                 "Xbox Series S",
-                "",
+                "Console de videogame Xbox Series S com armazenamento de 512GB", // Descrição do produto
                 800,
                 Duration.ofHours(1),
                 "/views/products/imProduct02.png"
         ));
 
+        // Adiciona um Apple Watch Series 10, preço de 1200, duração de 2 horas, com imagem
         products.add(createItem(
                 "Apple Watch Series 10",
-                "",
+                "Relógio inteligente da Apple com monitoramento de saúde avançado", // Descrição do produto
                 1200,
                 Duration.ofHours(2),
                 "/views/products/imProduct03.png"
         ));
 
+        // Adiciona um iPhone 15, preço de 900, duração de 30 minutos, com imagem
         products.add(createItem(
                 "iPhone 15",
-                "",
+                "Smartphone Apple com design moderno e câmera aprimorada", // Descrição do produto
                 900,
                 Duration.ofMinutes(30),
                 "/views/products/imProduct04.png"
         ));
 
+        // Adiciona um Rolex, preço de 1300, duração de 30 minutos, com imagem
         products.add(createItem(
                 "Rolex",
-                "",
+                "Relógio de luxo da marca Rolex", // Descrição do produto
                 1300,
                 Duration.ofMinutes(30),
                 "/views/products/imProduct05.png"
@@ -169,10 +176,18 @@ public class Products extends javax.swing.JPanel {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {
                     JLabel clickedLabel = (JLabel) e.getSource();
+
                     Item associatedItem = (Item) clickedLabel.getClientProperty("item");
 
-                    // Inicia o leilão para o item clicado
-                    startAuctionForItem(associatedItem);
+                    // Criar a resposta com status, mensagem e o item dentro do "data"
+                    Response response = new Response("AUCTION-STARTED", "The auction has started!");
+                    response.addData("item", associatedItem);
+
+                    // Enviar a resposta serializada como JSON
+                    ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
+//                    ServerAuctionApp.frame.getAppController().getMulticastController().send("AUCTION-STARTED");
+//                    Item associatedItem = (Item) clickedLabel.getClientProperty("item");
+//                    ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
                 }
             });
 
@@ -190,11 +205,6 @@ public class Products extends javax.swing.JPanel {
         // Atualiza o painel
         productsDisplay.revalidate();
         productsDisplay.repaint();
-    }
-
-    private void startAuctionForItem(Item item) {
-        System.out.println("Leilão iniciado para o item: " + item.getData().getTitle());
-        // Adicione aqui a lógica para iniciar o leilão
     }
 
     @SuppressWarnings("unchecked")

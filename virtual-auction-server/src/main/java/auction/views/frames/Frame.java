@@ -1,5 +1,6 @@
 package auction.views.frames;
 
+import auction.controllers.AppController;
 import auction.views.panels.Products;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
@@ -9,12 +10,18 @@ import javax.swing.JTextField;
 
 public class Frame extends javax.swing.JFrame {
 
+    private final AppController appController;
+    
     public static Products products;
 
-    public Frame() {
-        initComponents();
+    public Frame(AppController appController) {
+        initComponents();this.appController = appController;
     }
 
+    public AppController getAppController() {
+        return appController;
+    }
+    
     public void start() {
         this.setLayout(new BorderLayout());
 
