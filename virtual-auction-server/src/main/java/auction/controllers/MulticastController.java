@@ -1,8 +1,10 @@
 package auction.controllers;
 
 import auction.services.MulticastService;
+import auction.services.interfaces.TimeListener;
+import java.time.Duration;
 
-public class MulticastController {
+public class MulticastController implements TimeListener {
     
     private final MulticastService service;
 
@@ -32,6 +34,11 @@ public class MulticastController {
     
     public <T> T receiveObject(Class<T> type) {
         return service.receiveObject(type);
+    }
+
+    @Override
+    public void onTimeUpdate(Duration timeLeft) {
+        service.onTimeUpdate(timeLeft);
     }
     
 }

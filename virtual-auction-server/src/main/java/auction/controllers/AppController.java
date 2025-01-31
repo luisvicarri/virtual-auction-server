@@ -2,6 +2,7 @@ package auction.controllers;
 
 import auction.repositories.UserRepository;
 import auction.services.MulticastService;
+import auction.services.TimeService;
 import auction.services.UserService;
 import auction.stubs.UserServiceStub;
 
@@ -10,11 +11,19 @@ public final class AppController {
     private final UserController userController;
     private final UserServiceStub userStub;
     private final MulticastController multicastController;
+    private final TimeController timeController;
 
     public AppController() {
         this.userController = configUserController();
         this.userStub = configUserStub();
         this.multicastController = configMulticastController();
+        this.timeController = configTimeController();
+        this.timeController.addListener(multicastController);
+    }
+    
+    private TimeController configTimeController() {
+        TimeService service = new TimeService();
+        return new TimeController(service);
     }
     
     private MulticastController configMulticastController() {
@@ -44,6 +53,10 @@ public final class AppController {
 
     public MulticastController getMulticastController() {
         return multicastController;
+    }
+
+    public TimeController getTimeController() {
+        return timeController;
     }
     
 }
