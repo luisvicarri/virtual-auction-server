@@ -185,9 +185,10 @@ public class Products extends javax.swing.JPanel {
 
                     // Enviar a resposta serializada como JSON
                     ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
-//                    ServerAuctionApp.frame.getAppController().getMulticastController().send("AUCTION-STARTED");
-//                    Item associatedItem = (Item) clickedLabel.getClientProperty("item");
-//                    ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
+
+                    Duration auctionDuration = associatedItem.getData().getAuctionDuration();
+                    ServerAuctionApp.frame.getAppController().getTimeController().startTimer(auctionDuration);
+                    ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
                 }
             });
 

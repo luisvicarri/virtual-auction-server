@@ -1,7 +1,9 @@
 package auction.services;
 
+import auction.models.dtos.Response;
 import auction.utils.ConfigManager;
 import auction.utils.JsonUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,12 +13,15 @@ import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.time.Duration;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MulticastService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MulticastService.class);
 
     private final String MULTICAST_ADDRESS;
@@ -32,7 +37,7 @@ public class MulticastService {
         this.PORT = Integer.parseInt(ConfigManager.get("MULTICAST_PORT"));
         this.mapper = JsonUtil.getObjectMapper();
     }
-    
+
     /**
      * Conecta-se ao grupo multicast.
      */
@@ -135,7 +140,7 @@ public class MulticastService {
      * Envia dados brutos (byte array) para o grupo multicast.
      */
     private void sendData(byte[] data) {
-        try (DatagramSocket sendSocket = new DatagramSocket()) {
+        try ( DatagramSocket sendSocket = new DatagramSocket()) {
             DatagramPacket packet = new DatagramPacket(data, data.length, group, PORT);
             sendSocket.send(packet);
         } catch (IOException e) {
@@ -171,5 +176,20 @@ public class MulticastService {
         }
         return null;
     }
-    
+
+    public void onTimeUpdate(Duration timeLeft) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("timeLeft", timeLeft.getSeconds());
+
+        Response response = new Response("TIME-UPDATE", "Time updating", data);
+
+        try {
+            ObjectMapper objectMapper = JsonUtil.getObjectMapper();
+            String message = objectMapper.writeValueAsString(response);
+            System.out.println("MulticastController enviando atualização de tempo: \n" + message);
+            send(message);
+        } catch (JsonProcessingException e) {
+            System.err.println("Erro ao serializar mensagem de tempo.");
+        }
+    }
 }
