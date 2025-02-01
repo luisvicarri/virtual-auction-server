@@ -1,5 +1,6 @@
 package auction.models;
 
+import auction.main.ServerAuctionApp;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ public class Bid {
     private UUID id;
     private UUID itemId;
     private UUID bidderId;
+    private String bidderName;
     private double amount;
     private Instant timestamp;
 
@@ -20,6 +22,8 @@ public class Bid {
         this.bidderId = bidderId;
         this.amount = amount;
         this.timestamp = Instant.now();
+        User user = ServerAuctionApp.frame.getAppController().getUserController().findById(bidderId).orElse(null);
+        this.bidderName = user.getName();
     }
 
     public UUID getId() {
@@ -56,6 +60,14 @@ public class Bid {
 
     public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getBidderName() {
+        return bidderName;
+    }
+
+    public void setBidderName(String bidderName) {
+        this.bidderName = bidderName;
     }
     
 }
