@@ -2,23 +2,32 @@ package auction.services;
 
 import auction.models.Item;
 import auction.repositories.ItemRepository;
+import java.util.Map;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ItemService {
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final ItemRepository repository;
 
     public ItemService(ItemRepository repository) {
         this.repository = repository;
     }
-    
-    public boolean insert(Item newItem) {
-        if (findById(newItem.getId().toString()) != null) {
-            return false;
-        }
-        
-        return repository.addItem(newItem);
+
+    public Map<UUID, Item> getItems() {
+        return repository.getItems();
     }
     
+    public boolean insert(Item newItem) {
+        if (findById(newItem.getId()) != null) {
+            return false;
+        }
+
+        return repository.addItem(newItem);
+    }
+
     public Item findByTitle(String title) {
         return repository.getItems().values()
                 .stream()
@@ -26,13 +35,16 @@ public class ItemService {
                 .findFirst()
                 .orElse(null);
     }
-    
-    public Item findById(String id) {
+
+    public Item findById(UUID id) {
+        logger.info("Itens disponíveis no repositório:");
+        repository.getItems().values().forEach(item -> logger.info("Item: " + item.getId()));
+
         return repository.getItems().values()
                 .stream()
-                .filter(item -> item.getId().toString().equals(id))
+                .filter(item -> item.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
-    
+
 }

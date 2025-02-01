@@ -1,11 +1,15 @@
 package auction.views.panels;
 
 import auction.controllers.BiddingController;
+import auction.controllers.ItemController;
+import auction.dispatchers.MessageDispatcher;
+import auction.handlers.PlaceBid;
 import auction.main.ServerAuctionApp;
 import auction.models.Bid;
 import auction.models.Item;
 import auction.models.ItemData;
 import auction.models.dtos.Response;
+import auction.services.AuctionService;
 import auction.utils.FontUtil;
 import auction.utils.ImageUtil;
 import auction.utils.JsonUtil;
@@ -18,14 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import org.slf4j.LoggerFactory;
 
 public class Products extends javax.swing.JPanel {
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Products.class);
     private final ImageUtil imageUtil;
     private final FontUtil fontUtil;
 
@@ -37,8 +44,8 @@ public class Products extends javax.swing.JPanel {
 
         productsDisplay.setLayout(null);
         spDisplay.setVerticalScrollBar(new ScrollBarCustom());
-        List<Item> items = loadItems();
-        addProductTemplates(items);
+
+        initializeProducts();
     }
 
     private void customizeComponents() {
@@ -84,53 +91,38 @@ public class Products extends javax.swing.JPanel {
         );
     }
 
-    private List<Item> loadItems() {
+    private void initializeProducts() {
+        ItemController controller = ServerAuctionApp.frame.getAppController().getItemController();
+
+        // Carrega os produtos do repositório (se não houver, adiciona os padrões)
+        List<Item> items = loadItemsFromRepository(controller);
+
+        // Exibe os produtos na interface
+        addProductTemplates(items);
+    }
+
+    private List<Item> loadItemsFromRepository(ItemController controller) {
+        Map<UUID, Item> itemsMap = controller.getItems();
+
+        // Se já houver produtos no repositório, retorna a lista
+        if (!itemsMap.isEmpty()) {
+            logger.info("Produtos existentes no repositório");
+            return new ArrayList<>(itemsMap.values());
+        }
+
+        // Se o repositório estiver vazio, carrega os produtos padrões
         List<Item> products = new ArrayList<>();
 
-        // Adiciona um tênis Nike Air Max, preço de 600, duração de 5 minutos, com imagem
-        products.add(createItem(
-                "Tênis Nike Air Max",
-                "Tênis esportivo de alta performance da Nike", // Descrição do produto
-                600,
-                Duration.ofMinutes(5),
-                "/views/products/imProduct01.png"
-        ));
+        products.add(createItem("Tênis Nike Air Max", "Tênis esportivo de alta performance da Nike", 600, Duration.ofMinutes(5), "/views/products/imProduct01.png"));
+        products.add(createItem("Xbox Series S", "Console de videogame Xbox Series S com armazenamento de 512GB", 800, Duration.ofHours(1), "/views/products/imProduct02.png"));
+        products.add(createItem("Apple Watch Series 10", "Relógio inteligente da Apple com monitoramento de saúde avançado", 1200, Duration.ofHours(2), "/views/products/imProduct03.png"));
+        products.add(createItem("iPhone 15", "Smartphone Apple com design moderno e câmera aprimorada", 900, Duration.ofMinutes(30), "/views/products/imProduct04.png"));
+        products.add(createItem("Rolex", "Relógio de luxo da marca Rolex", 1300, Duration.ofMinutes(30), "/views/products/imProduct05.png"));
 
-        // Adiciona um Xbox Series S, preço de 800, duração de 1 hora, com imagem
-        products.add(createItem(
-                "Xbox Series S",
-                "Console de videogame Xbox Series S com armazenamento de 512GB", // Descrição do produto
-                800,
-                Duration.ofHours(1),
-                "/views/products/imProduct02.png"
-        ));
-
-        // Adiciona um Apple Watch Series 10, preço de 1200, duração de 2 horas, com imagem
-        products.add(createItem(
-                "Apple Watch Series 10",
-                "Relógio inteligente da Apple com monitoramento de saúde avançado", // Descrição do produto
-                1200,
-                Duration.ofHours(2),
-                "/views/products/imProduct03.png"
-        ));
-
-        // Adiciona um iPhone 15, preço de 900, duração de 30 minutos, com imagem
-        products.add(createItem(
-                "iPhone 15",
-                "Smartphone Apple com design moderno e câmera aprimorada", // Descrição do produto
-                900,
-                Duration.ofMinutes(30),
-                "/views/products/imProduct04.png"
-        ));
-
-        // Adiciona um Rolex, preço de 1300, duração de 30 minutos, com imagem
-        products.add(createItem(
-                "Rolex",
-                "Relógio de luxo da marca Rolex", // Descrição do produto
-                1300,
-                Duration.ofMinutes(30),
-                "/views/products/imProduct05.png"
-        ));
+        // Adiciona os produtos padrões ao repositório
+        for (Item item : products) {
+            controller.addItem(item);
+        }
 
         return products;
     }
@@ -184,27 +176,18 @@ public class Products extends javax.swing.JPanel {
                     JLabel clickedLabel = (JLabel) e.getSource();
 
                     Item associatedItem = (Item) clickedLabel.getClientProperty("item");
-
-                    // Criar a resposta com status, mensagem e o item dentro do "data"
-                    Response response = new Response("AUCTION-STARTED", "The auction has started!");
-                    response.addData("item", associatedItem);
-                    
-                    BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
-                    List<Bid> bids = biddingController.getBidsForItem(associatedItem.getId());
-                    String bidsJson;
-                    try {
-                        bidsJson = JsonUtil.getObjectMapper().writeValueAsString(bids);
-                        response.addData("bids", bidsJson);
-                    } catch (JsonProcessingException ex) {
-                        Logger.getLogger(Products.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    Response response = generateResponse(associatedItem);
 
                     // Enviar a resposta serializada como JSON
                     ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
 
+                    MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
+                    ServerAuctionApp.frame.getAppController().getMulticastController().startListening(dispatcher::addMessage);
+
                     Duration auctionDuration = associatedItem.getData().getAuctionDuration();
                     ServerAuctionApp.frame.getAppController().getTimeController().startTimer(auctionDuration);
                     ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
+
                 }
             });
 
@@ -222,6 +205,23 @@ public class Products extends javax.swing.JPanel {
         // Atualiza o painel
         productsDisplay.revalidate();
         productsDisplay.repaint();
+    }
+
+    private Response generateResponse(Item associatedItem) {
+        if (associatedItem == null) {
+            logger.error("Associated item is null.");
+            return new Response("error", "Associated item is null");
+        }
+
+        // Criar a resposta com status, mensagem e o item dentro do "data"
+        Response response = new Response("AUCTION-STARTED", "The auction has started!");
+        response.addData("item", associatedItem);
+
+        BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
+        List<Bid> bids = biddingController.getBidsForItem(associatedItem.getId());
+        response.addData("bids", bids);
+        
+        return response;
     }
 
     @SuppressWarnings("unchecked")

@@ -1,15 +1,22 @@
 package auction.controllers;
 
+import auction.dispatchers.MessageDispatcher;
 import auction.services.MulticastService;
 import auction.services.interfaces.TimeListener;
 import java.time.Duration;
+import java.util.function.Consumer;
 
 public class MulticastController implements TimeListener {
     
     private final MulticastService service;
+    private final MessageDispatcher dispatcher;
 
     public MulticastController(MulticastService service) {
-        this.service = service;
+        this.service = service;this.dispatcher = new MessageDispatcher();
+    }
+
+    public MessageDispatcher getDispatcher() {
+        return dispatcher;
     }
     
     public void connect() {
@@ -39,6 +46,10 @@ public class MulticastController implements TimeListener {
     @Override
     public void onTimeUpdate(Duration timeLeft) {
         service.onTimeUpdate(timeLeft);
+    }
+    
+    public void startListening(Consumer<String> onMessageReceived) {
+        service.startListening(onMessageReceived);
     }
     
 }

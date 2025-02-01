@@ -1,8 +1,13 @@
 package auction.controllers;
 
+import auction.dispatchers.MessageDispatcher;
+import auction.handlers.ClientConnected;
 import auction.repositories.BiddingRepository;
+import auction.repositories.ItemRepository;
 import auction.repositories.UserRepository;
+import auction.services.AuctionService;
 import auction.services.BiddingService;
+import auction.services.ItemService;
 import auction.services.MulticastService;
 import auction.services.TimeService;
 import auction.services.UserService;
@@ -15,6 +20,7 @@ public final class AppController {
     private final MulticastController multicastController;
     private final TimeController timeController;
     private final BiddingController biddingController;
+    private final ItemController itemController;
 
     public AppController() {
         this.userController = configUserController();
@@ -23,8 +29,22 @@ public final class AppController {
         this.timeController = configTimeController();
         this.timeController.addListener(multicastController);
         this.biddingController = configBiddingController();
+        this.itemController = configItemController();
+        
+        addHandlers();
     }
 
+    private void addHandlers() {
+        MessageDispatcher dispatcher = getMulticastController().getDispatcher();
+        dispatcher.registerHandler("CLIENT_CONNECTED", new ClientConnected(new AuctionService()));
+    }
+    
+    private ItemController configItemController() {
+        ItemRepository repository = new ItemRepository();
+        ItemService service = new ItemService(repository);
+        return new ItemController(service);
+    }
+    
     private BiddingController configBiddingController() {
         BiddingRepository repository = new BiddingRepository();
         BiddingService service = new BiddingService(repository);
@@ -71,6 +91,10 @@ public final class AppController {
 
     public BiddingController getBiddingController() {
         return biddingController;
+    }
+
+    public ItemController getItemController() {
+        return itemController;
     }
 
 }

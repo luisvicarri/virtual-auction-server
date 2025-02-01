@@ -1,5 +1,6 @@
 package auction.services;
 
+import auction.main.ServerAuctionApp;
 import auction.models.dtos.Response;
 import auction.utils.ConfigManager;
 import auction.utils.JsonUtil;
@@ -17,12 +18,13 @@ import java.time.Duration;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MulticastService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MulticastService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MulticastService.class);
 
     private final String MULTICAST_ADDRESS;
     private final int PORT;
@@ -43,7 +45,7 @@ public class MulticastService {
      */
     public void connect() {
         try {
-            LOGGER.info("Trying to connect to multicast group at {}:{}", MULTICAST_ADDRESS, PORT);
+            logger.info("Trying to connect to multicast group at {}:{}", MULTICAST_ADDRESS, PORT);
 
             this.group = InetAddress.getByName(MULTICAST_ADDRESS);
             this.networkInterface = getNetworkInterface();
@@ -56,9 +58,9 @@ public class MulticastService {
             this.socket.setNetworkInterface(networkInterface);
             this.socket.joinGroup(new InetSocketAddress(group, PORT), networkInterface);
 
-            LOGGER.info("Connection to multicast group {}:{} succeeded.", MULTICAST_ADDRESS, PORT);
+            logger.info("Connection to multicast group {}:{} succeeded.", MULTICAST_ADDRESS, PORT);
         } catch (IOException e) {
-            LOGGER.error("Error connecting to multicast group.", e);
+            logger.error("Error connecting to multicast group.", e);
             throw new RuntimeException(e); // Propaga o erro para que o chamador saiba que não foi possível conectar
         }
     }
@@ -69,12 +71,12 @@ public class MulticastService {
     public void disconnect() {
         if (socket != null) {
             try {
-                LOGGER.info("Leaving multicast group {}:{}.", MULTICAST_ADDRESS, PORT);
+                logger.info("Leaving multicast group {}:{}.", MULTICAST_ADDRESS, PORT);
                 socket.leaveGroup(new InetSocketAddress(group, PORT), networkInterface);
                 socket.close();
-                LOGGER.info("Successfully disconnected from multicast group.");
+                logger.info("Successfully disconnected from multicast group.");
             } catch (IOException e) {
-                LOGGER.error("Error disconnecting from multicast group.", e);
+                logger.error("Error disconnecting from multicast group.", e);
             }
         }
     }
@@ -84,11 +86,11 @@ public class MulticastService {
      */
     public void send(String msg) {
         try {
-            LOGGER.info("Sending message: {}", msg);
+            logger.info("Sending message: {}", msg);
             byte[] data = msg.getBytes();
             sendData(data);
         } catch (Exception e) {
-            LOGGER.error("Error sending message.", e);
+            logger.error("Error sending message.", e);
         }
     }
 
@@ -98,10 +100,10 @@ public class MulticastService {
     public void send(Object obj) {
         try {
             String json = mapper.writeValueAsString(obj);
-            LOGGER.info("Sending serialized object as JSON: {}", json);
+            logger.info("Sending serialized object as JSON with size {}: {}", json.length(), json);
             sendData(json.getBytes());
         } catch (IOException e) {
-            LOGGER.error("Error converting object to JSON.", e);
+            logger.error("Error converting object to JSON.", e);
         }
     }
 
@@ -110,12 +112,12 @@ public class MulticastService {
      */
     public String receiveString() {
         try {
-            LOGGER.info("Waiting for multicast message...");
+            logger.info("Waiting for multicast message...");
             String data = receiveData();
-            LOGGER.info("Message received: {}", data);
+            logger.info("Message received: {}", data);
             return data;
         } catch (IOException e) {
-            LOGGER.error("Error receiving message.", e);
+            logger.error("Error receiving message.", e);
         }
         return null;
     }
@@ -127,11 +129,11 @@ public class MulticastService {
         try {
             String receivedJson = receiveData();
             if (receivedJson != null) {
-                LOGGER.info("Received JSON message: {}", receivedJson);
+                logger.info("Received JSON message: {}", receivedJson);
                 return mapper.readValue(receivedJson, type);
             }
         } catch (IOException e) {
-            LOGGER.error("Error deserializing JSON.", e);
+            logger.error("Error deserializing JSON.", e);
         }
         return null;
     }
@@ -144,7 +146,7 @@ public class MulticastService {
             DatagramPacket packet = new DatagramPacket(data, data.length, group, PORT);
             sendSocket.send(packet);
         } catch (IOException e) {
-            LOGGER.error("Error sending multicast packet.", e);
+            logger.error("Error sending multicast packet.", e);
         }
     }
 
@@ -152,7 +154,7 @@ public class MulticastService {
      * Recebe dados brutos (byte array) do grupo multicast.
      */
     private String receiveData() throws IOException {
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[4096];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         socket.receive(packet);
         return new String(packet.getData(), 0, packet.getLength());
@@ -167,12 +169,12 @@ public class MulticastService {
             while (interfaces.hasMoreElements()) {
                 NetworkInterface netIf = interfaces.nextElement();
                 if (!netIf.isLoopback() && netIf.isUp()) {
-                    LOGGER.info("Network interface found: {}", netIf.getDisplayName());
+                    logger.info("Network interface found: {}", netIf.getDisplayName());
                     return netIf;
                 }
             }
         } catch (SocketException e) {
-            LOGGER.error("Error searching for network interfaces.", e);
+            logger.error("Error searching for network interfaces.", e);
         }
         return null;
     }
@@ -186,10 +188,24 @@ public class MulticastService {
         try {
             ObjectMapper objectMapper = JsonUtil.getObjectMapper();
             String message = objectMapper.writeValueAsString(response);
-            System.out.println("MulticastController enviando atualização de tempo: \n" + message);
             send(message);
-        } catch (JsonProcessingException e) {
-            System.err.println("Erro ao serializar mensagem de tempo.");
+        } catch (JsonProcessingException ex) {
+            logger.error("Error serializing time message.");
         }
+    }
+    
+    public void startListening(Consumer<String> onMessageReceived) {
+        new Thread(() -> {
+            try {
+                while (true) {
+                    String message = receiveString();
+                    if (message != null) {
+                        ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher().addMessage(message); // Encaminha para o dispatcher
+                    }
+                }
+            } catch (Exception ex) {
+                logger.error("Error listening to multicast messages: {}", ex);
+            }
+        }).start();
     }
 }

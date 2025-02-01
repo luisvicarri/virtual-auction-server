@@ -1,12 +1,81 @@
 {
-  "950f6990-1982-4d51-9389-73b673f9cd6e" : {
-    "id" : "950f6990-1982-4d51-9389-73b673f9cd6e",
+  "c6f68f87-aa1a-47d5-b978-ad6a97384511" : {
+    "id" : "c6f68f87-aa1a-47d5-b978-ad6a97384511",
     "data" : {
-      "title" : "Livro Harry Potter - Edição Limitada",
-      "description" : "Versão limitada do livro Harry Potter e a Pedra Filosofal",
+      "title" : "Tênis Nike Air Max",
+      "description" : "Tênis esportivo de alta performance da Nike",
       "bidIncrement" : 60.0,
       "reservePrice" : 600.0,
-      "auctionDuration" : 300.000000000
+      "auctionDuration" : 300.000000000,
+      "itemImage" : "/views/products/imProduct01.png"
+    },
+    "currentBid" : 0.0,
+    "openingBid" : 0.0,
+    "status" : "CREATED",
+    "auctionStart" : null,
+    "auctionEnd" : null,
+    "winningBidder" : null
+  },
+  "b44d3ebf-66f0-42b1-8e1b-23f918dd05bb" : {
+    "id" : "b44d3ebf-66f0-42b1-8e1b-23f918dd05bb",
+    "data" : {
+      "title" : "iPhone 15",
+      "description" : "Smartphone Apple com design moderno e câmera aprimorada",
+      "bidIncrement" : 90.0,
+      "reservePrice" : 900.0,
+      "auctionDuration" : 1800.000000000,
+      "itemImage" : "/views/products/imProduct04.png"
+    },
+    "currentBid" : 0.0,
+    "openingBid" : 0.0,
+    "status" : "CREATED",
+    "auctionStart" : null,
+    "auctionEnd" : null,
+    "winningBidder" : null
+  },
+  "329d76be-371e-4c3b-9fe1-2b8a5cfcfb88" : {
+    "id" : "329d76be-371e-4c3b-9fe1-2b8a5cfcfb88",
+    "data" : {
+      "title" : "Xbox Series S",
+      "description" : "Console de videogame Xbox Series S com armazenamento de 512GB",
+      "bidIncrement" : 80.0,
+      "reservePrice" : 800.0,
+      "auctionDuration" : 3600.000000000,
+      "itemImage" : "/views/products/imProduct02.png"
+    },
+    "currentBid" : 0.0,
+    "openingBid" : 0.0,
+    "status" : "CREATED",
+    "auctionStart" : null,
+    "auctionEnd" : null,
+    "winningBidder" : null
+  },
+  "4b92f54e-16a9-499e-8122-e710ae37d6e4" : {
+    "id" : "4b92f54e-16a9-499e-8122-e710ae37d6e4",
+    "data" : {
+      "title" : "Apple Watch Series 10",
+      "description" : "Relógio inteligente da Apple com monitoramento de saúde avançado",
+      "bidIncrement" : 120.0,
+      "reservePrice" : 1200.0,
+      "auctionDuration" : 7200.000000000,
+      "itemImage" : "/views/products/imProduct03.png"
+    },
+    "currentBid" : 0.0,
+    "openingBid" : 0.0,
+    "status" : "CREATED",
+    "auctionStart" : null,
+    "auctionEnd" : null,
+    "winningBidder" : null
+  },
+  "921e0684-8715-4263-b3dc-28fa79751460" : {
+    "id" : "921e0684-8715-4263-b3dc-28fa79751460",
+    "data" : {
+      "title" : "Rolex",
+      "description" : "Relógio de luxo da marca Rolex",
+      "bidIncrement" : 130.0,
+      "reservePrice" : 1300.0,
+      "auctionDuration" : 1800.000000000,
+      "itemImage" : "/views/products/imProduct05.png"
     },
     "currentBid" : 0.0,
     "openingBid" : 0.0,

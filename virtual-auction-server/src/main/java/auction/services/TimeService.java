@@ -37,7 +37,7 @@ public class TimeService {
     }
 
     private void updateTime(Duration timeLeft) {
-        logger.info("Sending time update: {}s", timeLeft.getSeconds());
+//        logger.info("Sending time update: {}s", timeLeft.getSeconds());
         Response response = new Response("TIME-UPDATE", "Updating time");
         response.addData("timeLeft", timeLeft.getSeconds());
         notifyTimeUpdate(timeLeft);

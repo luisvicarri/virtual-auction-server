@@ -2,8 +2,12 @@ package auction.utils;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImageUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
     
     public ImageIcon resizeIcon(ImageIcon icon, int maxWidth, int maxHeight) {
         Image img = icon.getImage();
@@ -29,6 +33,10 @@ public class ImageUtil {
     }
 
     public ImageIcon createImageIcon(String path) {
+        if (path == null || path.isEmpty()) {
+            logger.error("Erro: Caminho da imagem é nulo ou vazio.");
+            return null; // Retorna `null` para evitar exceção
+        }
         java.net.URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
