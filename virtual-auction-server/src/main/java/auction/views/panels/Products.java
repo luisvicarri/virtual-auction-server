@@ -1,19 +1,25 @@
 package auction.views.panels;
 
+import auction.controllers.BiddingController;
 import auction.main.ServerAuctionApp;
+import auction.models.Bid;
 import auction.models.Item;
 import auction.models.ItemData;
 import auction.models.dtos.Response;
 import auction.utils.FontUtil;
 import auction.utils.ImageUtil;
+import auction.utils.JsonUtil;
 import auction.views.components.ScrollBarCustom;
 import auction.views.panels.templates.Product;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.awt.Dimension;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -182,6 +188,16 @@ public class Products extends javax.swing.JPanel {
                     // Criar a resposta com status, mensagem e o item dentro do "data"
                     Response response = new Response("AUCTION-STARTED", "The auction has started!");
                     response.addData("item", associatedItem);
+                    
+                    BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
+                    List<Bid> bids = biddingController.getBidsForItem(associatedItem.getId());
+                    String bidsJson;
+                    try {
+                        bidsJson = JsonUtil.getObjectMapper().writeValueAsString(bids);
+                        response.addData("bids", bidsJson);
+                    } catch (JsonProcessingException ex) {
+                        Logger.getLogger(Products.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                     // Enviar a resposta serializada como JSON
                     ServerAuctionApp.frame.getAppController().getMulticastController().send(response);

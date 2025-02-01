@@ -1370,3 +1370,170 @@
 2025-01-31 17:25:25 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":287}}
 2025-01-31 17:25:26 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 286s
 2025-01-31 17:25:26 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":286}}
+2025-01-31 20:42:59 [main] WARN  a.repositories.BiddingRepository - Arquivo de lances não encontrado. Criando novo repositório.
+2025-01-31 20:42:59 [Thread-1] INFO  auction.services.MulticastService - Trying to connect to multicast group at 230.0.0.1:5000
+2025-01-31 20:42:59 [Thread-0] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-31 20:42:59 [Thread-1] INFO  auction.services.MulticastService - Network interface found: Intel(R) Dual Band Wireless-AC 3168
+2025-01-31 20:42:59 [Thread-1] INFO  auction.services.MulticastService - Connection to multicast group 230.0.0.1:5000 succeeded.
+2025-01-31 20:42:59 [Thread-1] INFO  auction.services.MulticastService - Waiting for multicast message...
+2025-01-31 20:43:35 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:53756
+2025-01-31 20:43:35 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-IN","name":"Admin","password":"Admin@123","id":"fde5439d-d57e-40f2-8f32-dc85682b05f2"}
+2025-01-31 20:43:35 [Thread-0] INFO  auction.stubs.UserServiceStub - User found successfully: Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]
+2025-01-31 20:43:35 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]","data":{"MULTICAST_ADDRESS":"230.0.0.1"}}
+2025-01-31 20:43:37 [Thread-1] INFO  auction.services.MulticastService - Message received: CLIENT_CONNECTED
+2025-01-31 20:43:41 [AWT-EventQueue-0] INFO  auction.services.MulticastService - Sending serialized object as JSON: {"status":"AUCTION-STARTED","message":"The auction has started!","data":{"item":{"id":"a18e942e-532f-42b0-870d-489c3fb5e4d6","data":{"title":"Apple Watch Series 10","description":"Relógio inteligente da Apple com monitoramento de saúde avançado","bidIncrement":120.0,"reservePrice":1200.0,"auctionDuration":7200.000000000,"itemImage":"/views/products/imProduct03.png"},"currentBid":0.0,"openingBid":0.0,"status":"CREATED","auctionStart":null,"auctionEnd":null,"winningBidder":null},"bids":[]}}
+2025-01-31 20:43:41 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7199s
+2025-01-31 20:43:41 [AWT-EventQueue-0] INFO  auction.services.MulticastService - Sending serialized object as JSON: {"id":"a18e942e-532f-42b0-870d-489c3fb5e4d6","data":{"title":"Apple Watch Series 10","description":"Relógio inteligente da Apple com monitoramento de saúde avançado","bidIncrement":120.0,"reservePrice":1200.0,"auctionDuration":7200.000000000,"itemImage":"/views/products/imProduct03.png"},"currentBid":0.0,"openingBid":0.0,"status":"CREATED","auctionStart":null,"auctionEnd":null,"winningBidder":null}
+2025-01-31 20:43:41 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7199}}
+2025-01-31 20:43:42 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7198s
+2025-01-31 20:43:42 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7198}}
+2025-01-31 20:43:43 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7197s
+2025-01-31 20:43:43 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7197}}
+2025-01-31 20:43:44 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7196s
+2025-01-31 20:43:44 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7196}}
+2025-01-31 20:43:45 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7195s
+2025-01-31 20:43:45 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7195}}
+2025-01-31 20:43:46 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7194s
+2025-01-31 20:43:46 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7194}}
+2025-01-31 20:43:47 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7193s
+2025-01-31 20:43:47 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7193}}
+2025-01-31 20:43:48 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7192s
+2025-01-31 20:43:48 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7192}}
+2025-01-31 20:43:49 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7191s
+2025-01-31 20:43:49 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7191}}
+2025-01-31 20:43:50 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7190s
+2025-01-31 20:43:50 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7190}}
+2025-01-31 20:43:51 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7189s
+2025-01-31 20:43:51 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7189}}
+2025-01-31 20:43:52 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7188s
+2025-01-31 20:43:52 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7188}}
+2025-01-31 20:58:17 [main] WARN  a.repositories.BiddingRepository - Arquivo de lances não encontrado. Criando novo repositório.
+2025-01-31 20:58:17 [Thread-1] INFO  auction.services.MulticastService - Trying to connect to multicast group at 230.0.0.1:5000
+2025-01-31 20:58:17 [Thread-0] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-31 20:58:17 [Thread-1] INFO  auction.services.MulticastService - Network interface found: Intel(R) Dual Band Wireless-AC 3168
+2025-01-31 20:58:17 [Thread-1] INFO  auction.services.MulticastService - Connection to multicast group 230.0.0.1:5000 succeeded.
+2025-01-31 20:58:17 [Thread-1] INFO  auction.services.MulticastService - Waiting for multicast message...
+2025-01-31 20:58:49 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:54131
+2025-01-31 20:58:49 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-IN","name":"Admin","password":"Admin@123","id":"fde5439d-d57e-40f2-8f32-dc85682b05f2"}
+2025-01-31 20:58:50 [Thread-0] INFO  auction.stubs.UserServiceStub - User found successfully: Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]
+2025-01-31 20:58:50 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]","data":{"MULTICAST_ADDRESS":"230.0.0.1"}}
+2025-01-31 20:58:51 [Thread-1] INFO  auction.services.MulticastService - Message received: CLIENT_CONNECTED
+2025-01-31 20:58:55 [AWT-EventQueue-0] INFO  auction.services.MulticastService - Sending serialized object as JSON: {"status":"AUCTION-STARTED","message":"The auction has started!","data":{"item":{"id":"16f39c09-a266-4063-8cbb-8919f7601a65","data":{"title":"Xbox Series S","description":"Console de videogame Xbox Series S com armazenamento de 512GB","bidIncrement":80.0,"reservePrice":800.0,"auctionDuration":3600.000000000,"itemImage":"/views/products/imProduct02.png"},"currentBid":0.0,"openingBid":0.0,"status":"CREATED","auctionStart":null,"auctionEnd":null,"winningBidder":null},"bids":"[]"}}
+2025-01-31 20:58:55 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3599s
+2025-01-31 20:58:55 [AWT-EventQueue-0] INFO  auction.services.MulticastService - Sending serialized object as JSON: {"id":"16f39c09-a266-4063-8cbb-8919f7601a65","data":{"title":"Xbox Series S","description":"Console de videogame Xbox Series S com armazenamento de 512GB","bidIncrement":80.0,"reservePrice":800.0,"auctionDuration":3600.000000000,"itemImage":"/views/products/imProduct02.png"},"currentBid":0.0,"openingBid":0.0,"status":"CREATED","auctionStart":null,"auctionEnd":null,"winningBidder":null}
+2025-01-31 20:58:55 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3599}}
+2025-01-31 20:58:56 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3598s
+2025-01-31 20:58:56 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3598}}
+2025-01-31 20:58:57 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3597s
+2025-01-31 20:58:57 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3597}}
+2025-01-31 20:58:58 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3596s
+2025-01-31 20:58:58 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3596}}
+2025-01-31 20:58:59 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3595s
+2025-01-31 20:58:59 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3595}}
+2025-01-31 20:59:00 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3594s
+2025-01-31 20:59:00 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3594}}
+2025-01-31 20:59:01 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3593s
+2025-01-31 20:59:01 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3593}}
+2025-01-31 20:59:02 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3592s
+2025-01-31 20:59:02 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3592}}
+2025-01-31 20:59:03 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3591s
+2025-01-31 20:59:03 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3591}}
+2025-01-31 20:59:04 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3590s
+2025-01-31 20:59:04 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3590}}
+2025-01-31 20:59:05 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 3589s
+2025-01-31 20:59:05 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":3589}}
+2025-01-31 20:59:49 [main] WARN  a.repositories.BiddingRepository - Arquivo de lances não encontrado. Criando novo repositório.
+2025-01-31 20:59:49 [Thread-1] INFO  auction.services.MulticastService - Trying to connect to multicast group at 230.0.0.1:5000
+2025-01-31 20:59:49 [Thread-0] INFO  auction.stubs.UserServiceStub - Server started on port 8080
+2025-01-31 20:59:49 [Thread-1] INFO  auction.services.MulticastService - Network interface found: Intel(R) Dual Band Wireless-AC 3168
+2025-01-31 20:59:49 [Thread-1] INFO  auction.services.MulticastService - Connection to multicast group 230.0.0.1:5000 succeeded.
+2025-01-31 20:59:49 [Thread-1] INFO  auction.services.MulticastService - Waiting for multicast message...
+2025-01-31 21:00:14 [Thread-0] INFO  auction.stubs.UserServiceStub - Connection established with client: /127.0.0.1:54189
+2025-01-31 21:00:14 [Thread-0] INFO  auction.stubs.UserServiceStub - Received request: {"action":"SIGN-IN","name":"Admin","password":"Admin@123","id":"fde5439d-d57e-40f2-8f32-dc85682b05f2"}
+2025-01-31 21:00:14 [Thread-0] INFO  auction.stubs.UserServiceStub - User found successfully: Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]
+2025-01-31 21:00:14 [Thread-0] INFO  auction.stubs.UserServiceStub - Sending response: {"status":"SUCCESS","message":"Optional[fde5439d-d57e-40f2-8f32-dc85682b05f2]","data":{"MULTICAST_ADDRESS":"230.0.0.1"}}
+2025-01-31 21:00:16 [Thread-1] INFO  auction.services.MulticastService - Message received: CLIENT_CONNECTED
+2025-01-31 21:00:19 [AWT-EventQueue-0] INFO  auction.services.MulticastService - Sending serialized object as JSON: {"status":"AUCTION-STARTED","message":"The auction has started!","data":{"item":{"id":"6e5853e1-a210-4c95-a695-501a3589613b","data":{"title":"Apple Watch Series 10","description":"Relógio inteligente da Apple com monitoramento de saúde avançado","bidIncrement":120.0,"reservePrice":1200.0,"auctionDuration":7200.000000000,"itemImage":"/views/products/imProduct03.png"},"currentBid":0.0,"openingBid":0.0,"status":"CREATED","auctionStart":null,"auctionEnd":null,"winningBidder":null},"bids":"[]"}}
+2025-01-31 21:00:19 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7199s
+2025-01-31 21:00:19 [AWT-EventQueue-0] INFO  auction.services.MulticastService - Sending serialized object as JSON: {"id":"6e5853e1-a210-4c95-a695-501a3589613b","data":{"title":"Apple Watch Series 10","description":"Relógio inteligente da Apple com monitoramento de saúde avançado","bidIncrement":120.0,"reservePrice":1200.0,"auctionDuration":7200.000000000,"itemImage":"/views/products/imProduct03.png"},"currentBid":0.0,"openingBid":0.0,"status":"CREATED","auctionStart":null,"auctionEnd":null,"winningBidder":null}
+2025-01-31 21:00:19 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7199}}
+2025-01-31 21:00:20 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7198s
+2025-01-31 21:00:20 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7198}}
+2025-01-31 21:00:21 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7197s
+2025-01-31 21:00:21 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7197}}
+2025-01-31 21:00:22 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7196s
+2025-01-31 21:00:22 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7196}}
+2025-01-31 21:00:23 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7195s
+2025-01-31 21:00:23 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7195}}
+2025-01-31 21:00:24 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7194s
+2025-01-31 21:00:24 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7194}}
+2025-01-31 21:00:25 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7193s
+2025-01-31 21:00:25 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7193}}
+2025-01-31 21:00:26 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7192s
+2025-01-31 21:00:26 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7192}}
+2025-01-31 21:00:27 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7191s
+2025-01-31 21:00:27 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7191}}
+2025-01-31 21:00:28 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7190s
+2025-01-31 21:00:28 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7190}}
+2025-01-31 21:00:29 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7189s
+2025-01-31 21:00:29 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7189}}
+2025-01-31 21:00:30 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7188s
+2025-01-31 21:00:30 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7188}}
+2025-01-31 21:00:31 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7187s
+2025-01-31 21:00:31 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7187}}
+2025-01-31 21:00:32 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7186s
+2025-01-31 21:00:32 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7186}}
+2025-01-31 21:00:33 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7185s
+2025-01-31 21:00:33 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7185}}
+2025-01-31 21:00:34 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7184s
+2025-01-31 21:00:34 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7184}}
+2025-01-31 21:00:35 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7183s
+2025-01-31 21:00:35 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7183}}
+2025-01-31 21:00:36 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7182s
+2025-01-31 21:00:36 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7182}}
+2025-01-31 21:00:37 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7181s
+2025-01-31 21:00:37 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7181}}
+2025-01-31 21:00:38 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7180s
+2025-01-31 21:00:38 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7180}}
+2025-01-31 21:00:40 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7179s
+2025-01-31 21:00:40 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7179}}
+2025-01-31 21:00:41 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7178s
+2025-01-31 21:00:41 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7178}}
+2025-01-31 21:00:42 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7177s
+2025-01-31 21:00:42 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7177}}
+2025-01-31 21:00:43 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7176s
+2025-01-31 21:00:43 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7176}}
+2025-01-31 21:00:44 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7175s
+2025-01-31 21:00:44 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7175}}
+2025-01-31 21:00:45 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7174s
+2025-01-31 21:00:45 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7174}}
+2025-01-31 21:00:46 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7173s
+2025-01-31 21:00:46 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7173}}
+2025-01-31 21:00:47 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7172s
+2025-01-31 21:00:47 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7172}}
+2025-01-31 21:00:48 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7171s
+2025-01-31 21:00:48 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7171}}
+2025-01-31 21:00:49 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7170s
+2025-01-31 21:00:49 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7170}}
+2025-01-31 21:00:50 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7169s
+2025-01-31 21:00:50 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7169}}
+2025-01-31 21:00:51 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7168s
+2025-01-31 21:00:51 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7168}}
+2025-01-31 21:00:52 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7167s
+2025-01-31 21:00:52 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7167}}
+2025-01-31 21:00:53 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7166s
+2025-01-31 21:00:53 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7166}}
+2025-01-31 21:00:54 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7165s
+2025-01-31 21:00:54 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7165}}
+2025-01-31 21:00:55 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7164s
+2025-01-31 21:00:55 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7164}}
+2025-01-31 21:00:56 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7163s
+2025-01-31 21:00:56 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7163}}
+2025-01-31 21:00:57 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7162s
+2025-01-31 21:00:57 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7162}}
+2025-01-31 21:00:58 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7161s
+2025-01-31 21:00:58 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7161}}
+2025-01-31 21:00:59 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7160s
+2025-01-31 21:00:59 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7160}}
+2025-01-31 21:01:00 [pool-1-thread-1] INFO  auction.services.TimeService - Sending time update: 7159s
+2025-01-31 21:01:00 [pool-1-thread-1] INFO  auction.services.MulticastService - Sending message: {"status":"TIME-UPDATE","message":"Time updating","data":{"timeLeft":7159}}
