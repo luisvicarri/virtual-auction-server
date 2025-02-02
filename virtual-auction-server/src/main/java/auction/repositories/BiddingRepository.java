@@ -2,7 +2,6 @@ package auction.repositories;
 
 import auction.models.Bid;
 import auction.utils.JsonUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ public class BiddingRepository {
     private final ObjectMapper mapper = JsonUtil.getObjectMapper();
 
     public BiddingRepository() {
-        loadBids();
+        clearBidsFile();
     }
 
     public Map<UUID, List<Bid>> getBidsByItem() {
@@ -42,11 +41,11 @@ public class BiddingRepository {
 
         try {
             saveBids();
-            logger.info("Lance salvo para o item {}: {}", itemId, bid.getAmount());
+            logger.info("Saved bid for item {}: {}", itemId, bid.getAmount());
             return true;
         } catch (Exception ex) {
             bids.remove(bid);
-            logger.error("Erro ao salvar lances. Removendo o lance recém-adicionado: {}", bid.getId(), ex);
+            logger.error("Error saving bids. Removing newly added bid: {}", bid.getId(), ex);
             return false;
         }
     }
@@ -58,24 +57,23 @@ public class BiddingRepository {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(file, bidsByItem);
         } catch (IOException ex) {
-            logger.error("Erro ao salvar lances no arquivo JSON", ex);
+            logger.error("Error saving bids to JSON file.", ex);
         }
     }
 
-    /**
-     * Carrega os lances do arquivo JSON para a memória.
-     */
-    private void loadBids() {
-        if (file.exists()) {
-            try {
-                bidsByItem.clear();
-                bidsByItem.putAll(mapper.readValue(file, new TypeReference<Map<UUID, List<Bid>>>() {}));
-                logger.info("Lances carregados do arquivo com sucesso.");
-            } catch (IOException ex) {
-                logger.error("Erro ao carregar lances do arquivo JSON", ex);
+    private void clearBidsFile() {
+        try {
+            if (file.exists()) {
+                if (file.delete()) {
+                    logger.info("Bids file deleted when starting repository.");
+                } else {
+                    logger.warn("Unable to delete bid file.");
+                }
             }
-        } else {
-            logger.warn("Arquivo de lances não encontrado. Criando novo repositório.");
+            file.createNewFile();
+        } catch (IOException ex) {
+            logger.error("Error cleaning bid file.", ex);
         }
     }
+
 }

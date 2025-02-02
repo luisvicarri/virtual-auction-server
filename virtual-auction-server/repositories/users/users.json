@@ -3,5 +3,10 @@
     "id" : "ebae1820-e61c-4c02-9542-3959084d872c",
     "name" : "Admin",
     "hashedPassword" : "$2a$10$OGUssnCTnqJwWweMUETCquGclj7Cwj2A71Zp5XP.GiW3elZJgokxW"
+  },
+  "869d6dd6-138e-4438-8bd6-af071ef511f3" : {
+    "id" : "869d6dd6-138e-4438-8bd6-af071ef511f3",
+    "name" : "Test",
+    "hashedPassword" : "$2a$10$HPzdXP6zYF3yzSBxsjMdh..xZ/fn9/KnVfLWreNgSZpXp4tx5nura"
   }
 }

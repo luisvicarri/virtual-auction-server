@@ -1,0 +1,38 @@
+{
+  "9b64ae82-b503-49ec-9098-8c3593c6ac56" : [ {
+    "id" : "3880050e-904b-4aca-99df-0e8b371f6d61",
+    "itemId" : "9b64ae82-b503-49ec-9098-8c3593c6ac56",
+    "bidderId" : "ebae1820-e61c-4c02-9542-3959084d872c",
+    "bidderName" : "Admin",
+    "amount" : 120.0,
+    "timestamp" : 1738533979.280093700
+  }, {
+    "id" : "8b6213a4-cf92-43cb-991c-9ad35e4cae27",
+    "itemId" : "9b64ae82-b503-49ec-9098-8c3593c6ac56",
+    "bidderId" : "869d6dd6-138e-4438-8bd6-af071ef511f3",
+    "bidderName" : "Test",
+    "amount" : 240.0,
+    "timestamp" : 1738533986.914645400
+  }, {
+    "id" : "ef24577c-570e-44fa-ab4f-ad58b903b40e",
+    "itemId" : "9b64ae82-b503-49ec-9098-8c3593c6ac56",
+    "bidderId" : "ebae1820-e61c-4c02-9542-3959084d872c",
+    "bidderName" : "Admin",
+    "amount" : 360.0,
+    "timestamp" : 1738533993.767222400
+  }, {
+    "id" : "7c346985-cd64-4be5-90c8-9427c9c7a51f",
+    "itemId" : "9b64ae82-b503-49ec-9098-8c3593c6ac56",
+    "bidderId" : "ebae1820-e61c-4c02-9542-3959084d872c",
+    "bidderName" : "Admin",
+    "amount" : 480.0,
+    "timestamp" : 1738534028.291177300
+  }, {
+    "id" : "6a64b39a-c995-4afb-ae21-91b88e800af4",
+    "itemId" : "9b64ae82-b503-49ec-9098-8c3593c6ac56",
+    "bidderId" : "869d6dd6-138e-4438-8bd6-af071ef511f3",
+    "bidderName" : "Test",
+    "amount" : 600.0,
+    "timestamp" : 1738534038.119800600
+  } ]
+}

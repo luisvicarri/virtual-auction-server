@@ -1,17 +1,14 @@
 package auction.services;
 
 import auction.controllers.BiddingController;
-import auction.dispatchers.MessageDispatcher;
 import auction.main.ServerAuctionApp;
 import auction.models.Bid;
 import auction.models.Item;
 import auction.models.dtos.Response;
 import auction.utils.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +28,8 @@ public class AuctionService {
                 return;
             }
 
+            JsonUtil.printFormattedJson(message);
+            
             // Desserializa a mensagem para um objeto Response
             Response response = mapper.readValue(message, Response.class);
 
@@ -51,10 +50,10 @@ public class AuctionService {
             // Verifica se os campos essenciais estão presentes
             Object bidObject = data.get("bid");
             Object itemIdObject = data.get("itemId");
-            Object bidsObject = data.get("bids");
+//            Object bidsObject = data.get("bids");
 
-            if (bidObject == null || itemIdObject == null || bidsObject == null) {
-                logger.warn("Campos 'bid', 'itemId' ou 'bids' ausentes.");
+            if (bidObject == null || itemIdObject == null) {
+                logger.warn("Campos 'bid' ou 'itemId' ausentes.");
                 return;
             }
 
@@ -62,7 +61,7 @@ public class AuctionService {
             UUID itemId;
             try {
                 itemId = mapper.convertValue(itemIdObject, UUID.class);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 logger.warn("Formato inválido do itemId: " + itemIdObject);
                 return;
             }
@@ -83,21 +82,21 @@ public class AuctionService {
             }
             Bid newBid = mapper.convertValue(bidMap, Bid.class);
 
-            // Trata o campo "bids" corretamente
-            List<Bid> updatedBids;
-            if (bidsObject instanceof List<?>) {
-                updatedBids = mapper.convertValue(bidsObject, new TypeReference<List<Bid>>() {});
-            } else if (bidsObject instanceof String) {
-                try {
-                    updatedBids = mapper.readValue((String) bidsObject, new TypeReference<List<Bid>>() {});
-                } catch (Exception e) {
-                    logger.error("Erro ao desserializar campo 'bids'.", e);
-                    return;
-                }
-            } else {
-                logger.warn("Formato inesperado de 'bids': " + bidsObject);
-                return;
-            }
+//            // Trata o campo "bids" corretamente
+//            List<Bid> updatedBids;
+//            if (bidsObject instanceof List<?>) {
+//                updatedBids = mapper.convertValue(bidsObject, new TypeReference<List<Bid>>() {});
+//            } else if (bidsObject instanceof String bidsStr) {
+//                try {
+//                    updatedBids = mapper.readValue(bidsStr, new TypeReference<List<Bid>>() {});
+//                } catch (JsonProcessingException e) {
+//                    logger.error("Erro ao desserializar campo 'bids'.", e);
+//                    return;
+//                }
+//            } else {
+//                logger.warn("Formato inesperado de 'bids': " + bidsObject);
+//                return;
+//            }
 
             // Armazena o lance
             BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
@@ -110,15 +109,18 @@ public class AuctionService {
 
             // Cria uma nova resposta para enviar aos clientes
             Response bidUpdateResponse = new Response("BID-UPDATED", "Bid has been updated.");
-            bidUpdateResponse.addData("bids", updatedBids);
+            bidUpdateResponse.addData("bids", biddingController.getBidsForItem(itemId));
             bidUpdateResponse.addData("itemId", itemId.toString());
 
             // Serializa a resposta e envia para os clientes
-            String responseJson = mapper.writeValueAsString(bidUpdateResponse);
-            MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
-            logger.info("Mensagem enviada para os clientes: " + responseJson);
-            dispatcher.addMessage(responseJson);
-
+//            String responseJson = mapper.writeValueAsString(bidUpdateResponse);
+//            JsonUtil.printFormattedJson(responseJson);
+//            MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
+//            logger.info("Mensagem enviada para os clientes: " + responseJson);
+//            dispatcher.addMessage(responseJson);
+            
+            ServerAuctionApp.frame.getAppController().getMulticastController().send(bidUpdateResponse);
+            
             logger.info("Lance processado e enviado aos clientes.");
         } catch (JsonProcessingException e) {
             logger.error("Erro ao processar JSON recebido.", e);
@@ -131,9 +133,8 @@ public class AuctionService {
         try {
             JsonNode jsonNode = mapper.readTree(message);
             logger.info("New client connected: {}", jsonNode);
-            // Aqui você pode atualizar a UI, adicionar o cliente à lista, etc.
         } catch (JsonProcessingException e) {
-            logger.error("Error processing CLIENT_CONNECTED message: {}", message, e);
+            logger.error("Error processing CLIENT-CONNECTED message: {}", message, e);
         }
     }
     
