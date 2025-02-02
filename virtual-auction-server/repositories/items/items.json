@@ -1,6 +1,6 @@
 {
-  "c6f68f87-aa1a-47d5-b978-ad6a97384511" : {
-    "id" : "c6f68f87-aa1a-47d5-b978-ad6a97384511",
+  "f55fd16d-abf1-4b81-b5c3-5eaf93598387" : {
+    "id" : "f55fd16d-abf1-4b81-b5c3-5eaf93598387",
     "data" : {
       "title" : "Tênis Nike Air Max",
       "description" : "Tênis esportivo de alta performance da Nike",
@@ -16,42 +16,8 @@
     "auctionEnd" : null,
     "winningBidder" : null
   },
-  "b44d3ebf-66f0-42b1-8e1b-23f918dd05bb" : {
-    "id" : "b44d3ebf-66f0-42b1-8e1b-23f918dd05bb",
-    "data" : {
-      "title" : "iPhone 15",
-      "description" : "Smartphone Apple com design moderno e câmera aprimorada",
-      "bidIncrement" : 90.0,
-      "reservePrice" : 900.0,
-      "auctionDuration" : 1800.000000000,
-      "itemImage" : "/views/products/imProduct04.png"
-    },
-    "currentBid" : 0.0,
-    "openingBid" : 0.0,
-    "status" : "CREATED",
-    "auctionStart" : null,
-    "auctionEnd" : null,
-    "winningBidder" : null
-  },
-  "329d76be-371e-4c3b-9fe1-2b8a5cfcfb88" : {
-    "id" : "329d76be-371e-4c3b-9fe1-2b8a5cfcfb88",
-    "data" : {
-      "title" : "Xbox Series S",
-      "description" : "Console de videogame Xbox Series S com armazenamento de 512GB",
-      "bidIncrement" : 80.0,
-      "reservePrice" : 800.0,
-      "auctionDuration" : 3600.000000000,
-      "itemImage" : "/views/products/imProduct02.png"
-    },
-    "currentBid" : 0.0,
-    "openingBid" : 0.0,
-    "status" : "CREATED",
-    "auctionStart" : null,
-    "auctionEnd" : null,
-    "winningBidder" : null
-  },
-  "4b92f54e-16a9-499e-8122-e710ae37d6e4" : {
-    "id" : "4b92f54e-16a9-499e-8122-e710ae37d6e4",
+  "9b64ae82-b503-49ec-9098-8c3593c6ac56" : {
+    "id" : "9b64ae82-b503-49ec-9098-8c3593c6ac56",
     "data" : {
       "title" : "Apple Watch Series 10",
       "description" : "Relógio inteligente da Apple com monitoramento de saúde avançado",
@@ -67,8 +33,42 @@
     "auctionEnd" : null,
     "winningBidder" : null
   },
-  "921e0684-8715-4263-b3dc-28fa79751460" : {
-    "id" : "921e0684-8715-4263-b3dc-28fa79751460",
+  "414bf49c-e8cb-4ad9-bcc3-245c360e6641" : {
+    "id" : "414bf49c-e8cb-4ad9-bcc3-245c360e6641",
+    "data" : {
+      "title" : "iPhone 15",
+      "description" : "Smartphone Apple com design moderno e câmera aprimorada",
+      "bidIncrement" : 90.0,
+      "reservePrice" : 900.0,
+      "auctionDuration" : 1800.000000000,
+      "itemImage" : "/views/products/imProduct04.png"
+    },
+    "currentBid" : 0.0,
+    "openingBid" : 0.0,
+    "status" : "CREATED",
+    "auctionStart" : null,
+    "auctionEnd" : null,
+    "winningBidder" : null
+  },
+  "d1a87eb7-71fc-42ec-b85f-acbefbc60b71" : {
+    "id" : "d1a87eb7-71fc-42ec-b85f-acbefbc60b71",
+    "data" : {
+      "title" : "Xbox Series S",
+      "description" : "Console de videogame Xbox Series S com armazenamento de 512GB",
+      "bidIncrement" : 80.0,
+      "reservePrice" : 800.0,
+      "auctionDuration" : 3600.000000000,
+      "itemImage" : "/views/products/imProduct02.png"
+    },
+    "currentBid" : 0.0,
+    "openingBid" : 0.0,
+    "status" : "CREATED",
+    "auctionStart" : null,
+    "auctionEnd" : null,
+    "winningBidder" : null
+  },
+  "705a1d55-a0eb-4499-aafa-49952485a0c9" : {
+    "id" : "705a1d55-a0eb-4499-aafa-49952485a0c9",
     "data" : {
       "title" : "Rolex",
       "description" : "Relógio de luxo da marca Rolex",

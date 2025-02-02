@@ -18,79 +18,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//public class AuctionService {
-//
-//    private static final Logger logger = LoggerFactory.getLogger(AuctionService.class);
-//    private final ObjectMapper mapper = JsonUtil.getObjectMapper();
-//
-//    public void processBid(String message) {
-//        try {
-//            // Verifica se a mensagem é válida
-//            if (!message.trim().startsWith("{")) {
-//                logger.info("Mensagem ignorada: " + message);
-//                return;
-//            }
-//
-//            // Desserializa a mensagem para um objeto Response
-//            Response response = mapper.readValue(message, Response.class);
-//
-//            // Verifica se a mensagem é um lance válido
-//            if (!"NEW-BID".equals(response.getStatus())) {
-//                logger.info("Mensagem ignorada (status diferente de NEW-BID): " + response.getStatus());
-//                return;
-//            }
-//
-//            // Obtém os dados da resposta
-//            Map<String, Object> data = response.getData().orElseThrow();
-//            Object bidObject = data.get("bid");
-//            Object itemIdObject = data.get("itemId");
-//
-//            if (!(bidObject instanceof Map) || !(itemIdObject instanceof String)) {
-//                logger.warn("Formato inválido da mensagem de lance.");
-//                return;
-//            }
-//
-//            UUID itemId = UUID.fromString((String) itemIdObject);
-//
-//            Item associatedItem = ServerAuctionApp.frame.getAppController()
-//                    .getItemController().findById(itemId);
-//
-//            if (associatedItem == null) {
-//                logger.warn("Item não encontrado: " + itemId);
-//                return;
-//            }
-//
-//            // Converte o objeto para Bid
-//            Bid newBid = mapper.convertValue(bidObject, Bid.class);
-//
-//            // Armazena o lance
-//            BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
-//            biddingController.addBid(itemId, newBid);
-//
-//            // Obtém a lista de lances atualizada para o item
-//            List<Bid> updatedBids = biddingController.getBidsForItem(itemId);
-//
-//            // Cria uma nova resposta para enviar aos clientes
-//            Response bidUpdateResponse = new Response("BID-UPDATED", "Bid has been updated.");
-//            bidUpdateResponse.addData("bids", updatedBids);
-//            bidUpdateResponse.addData("itemId", itemId.toString());
-//
-//            // Serializa a resposta e envia para os clientes
-//            String responseJson = mapper.writeValueAsString(bidUpdateResponse);
-//            MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
-//            logger.info("Mensagem enviada para os clientes: " + responseJson);
-//            dispatcher.addMessage(responseJson);
-//
-//            logger.info("Lance processado e enviado aos clientes.");
-//        } catch (JsonProcessingException e) {
-//            logger.error("Erro ao processar lance recebido.", e);
-//        } catch (IllegalArgumentException e) {
-//            logger.error("Erro inesperado ao processar lance.", e);
-//        }
-//    }
-//
-//}
-
 public class AuctionService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuctionService.class);
@@ -174,7 +101,12 @@ public class AuctionService {
 
             // Armazena o lance
             BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
-            biddingController.addBid(itemId, newBid);
+            
+            if (biddingController.addBid(itemId, newBid)) {
+                logger.debug("The bid was successfully registered.");
+            } else {
+                logger.warn("There was an error registering the bid.");
+            }
 
             // Cria uma nova resposta para enviar aos clientes
             Response bidUpdateResponse = new Response("BID-UPDATED", "Bid has been updated.");
