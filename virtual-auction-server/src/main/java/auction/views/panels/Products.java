@@ -3,19 +3,16 @@ package auction.views.panels;
 import auction.controllers.BiddingController;
 import auction.controllers.ItemController;
 import auction.dispatchers.MessageDispatcher;
-import auction.handlers.PlaceBid;
+import auction.enums.AuctionStatus;
 import auction.main.ServerAuctionApp;
 import auction.models.Bid;
 import auction.models.Item;
 import auction.models.ItemData;
 import auction.models.dtos.Response;
-import auction.services.AuctionService;
 import auction.utils.FontUtil;
 import auction.utils.ImageUtil;
-import auction.utils.JsonUtil;
 import auction.views.components.ScrollBarCustom;
 import auction.views.panels.templates.Product;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.awt.Dimension;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -23,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -174,8 +169,11 @@ public class Products extends javax.swing.JPanel {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {
                     JLabel clickedLabel = (JLabel) e.getSource();
-
                     Item associatedItem = (Item) clickedLabel.getClientProperty("item");
+                    
+                    ServerAuctionApp.frame.getAuction().setStatus(AuctionStatus.ONGOING);
+                    ServerAuctionApp.frame.getAuction().setCurrentAuctionItem(associatedItem);
+                    
                     Response response = generateResponse(associatedItem);
 
                     // Enviar a resposta serializada como JSON

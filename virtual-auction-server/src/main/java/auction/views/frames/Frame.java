@@ -1,6 +1,7 @@
 package auction.views.frames;
 
 import auction.controllers.AppController;
+import auction.models.Auction;
 import auction.views.panels.Products;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
@@ -11,15 +12,20 @@ import javax.swing.JTextField;
 public class Frame extends javax.swing.JFrame {
 
     private final AppController appController;
-    
     public static Products products;
+    private final Auction auction;
 
     public Frame(AppController appController) {
         initComponents();this.appController = appController;
+        auction = new Auction();
     }
 
     public AppController getAppController() {
         return appController;
+    }
+
+    public Auction getAuction() {
+        return auction;
     }
     
     public void start() {
@@ -39,10 +45,10 @@ public class Frame extends javax.swing.JFrame {
 
     public void clearForm(JComponent... components) {
         for (JComponent component : components) {
-            if (component instanceof JTextField) {
-                ((JTextField) component).setText("");
-            } else if (component instanceof JPasswordField) {
-                ((JPasswordField) component).setText("");
+            if (component instanceof JTextField jTextField) {
+                jTextField.setText("");
+            } else if (component instanceof JPasswordField jPasswordField) {
+                jPasswordField.setText("");
             }
         }
     }

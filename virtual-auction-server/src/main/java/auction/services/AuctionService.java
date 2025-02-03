@@ -1,6 +1,7 @@
 package auction.services;
 
 import auction.controllers.BiddingController;
+import auction.enums.AuctionStatus;
 import auction.main.ServerAuctionApp;
 import auction.models.Bid;
 import auction.models.Item;
@@ -9,6 +10,7 @@ import auction.utils.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +31,7 @@ public class AuctionService {
             }
 
             JsonUtil.printFormattedJson(message);
-            
+
             // Desserializa a mensagem para um objeto Response
             Response response = mapper.readValue(message, Response.class);
 
@@ -50,7 +52,6 @@ public class AuctionService {
             // Verifica se os campos essenciais estão presentes
             Object bidObject = data.get("bid");
             Object itemIdObject = data.get("itemId");
-//            Object bidsObject = data.get("bids");
 
             if (bidObject == null || itemIdObject == null) {
                 logger.warn("Campos 'bid' ou 'itemId' ausentes.");
@@ -82,25 +83,9 @@ public class AuctionService {
             }
             Bid newBid = mapper.convertValue(bidMap, Bid.class);
 
-//            // Trata o campo "bids" corretamente
-//            List<Bid> updatedBids;
-//            if (bidsObject instanceof List<?>) {
-//                updatedBids = mapper.convertValue(bidsObject, new TypeReference<List<Bid>>() {});
-//            } else if (bidsObject instanceof String bidsStr) {
-//                try {
-//                    updatedBids = mapper.readValue(bidsStr, new TypeReference<List<Bid>>() {});
-//                } catch (JsonProcessingException e) {
-//                    logger.error("Erro ao desserializar campo 'bids'.", e);
-//                    return;
-//                }
-//            } else {
-//                logger.warn("Formato inesperado de 'bids': " + bidsObject);
-//                return;
-//            }
-
             // Armazena o lance
             BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
-            
+
             if (biddingController.addBid(itemId, newBid)) {
                 logger.debug("The bid was successfully registered.");
             } else {
@@ -112,15 +97,9 @@ public class AuctionService {
             bidUpdateResponse.addData("bids", biddingController.getBidsForItem(itemId));
             bidUpdateResponse.addData("itemId", itemId.toString());
 
-            // Serializa a resposta e envia para os clientes
-//            String responseJson = mapper.writeValueAsString(bidUpdateResponse);
-//            JsonUtil.printFormattedJson(responseJson);
-//            MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
-//            logger.info("Mensagem enviada para os clientes: " + responseJson);
-//            dispatcher.addMessage(responseJson);
-            
+            // Envia para os clientes
             ServerAuctionApp.frame.getAppController().getMulticastController().send(bidUpdateResponse);
-            
+
             logger.info("Lance processado e enviado aos clientes.");
         } catch (JsonProcessingException e) {
             logger.error("Erro ao processar JSON recebido.", e);
@@ -128,8 +107,21 @@ public class AuctionService {
             logger.error("Erro inesperado ao processar lance.", e);
         }
     }
-    
+
     public void clientConnected(String message) {
+        if (ServerAuctionApp.frame.getAuction().getStatus() == AuctionStatus.ONGOING) {
+            
+            Item currentItem = ServerAuctionApp.frame.getAuction().getCurrentAuctionItem();
+            Response response = new Response("AUCTION-INFO", "Auction in progress");
+            response.addData("item", currentItem);
+
+            BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
+            List<Bid> bids = biddingController.getBidsForItem(currentItem.getId());
+            response.addData("bids", bids);
+
+            ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
+        }
+
         try {
             JsonNode jsonNode = mapper.readTree(message);
             logger.info("New client connected: {}", jsonNode);
@@ -137,5 +129,4 @@ public class AuctionService {
             logger.error("Error processing CLIENT-CONNECTED message: {}", message, e);
         }
     }
-    
 }
