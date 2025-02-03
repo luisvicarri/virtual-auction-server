@@ -27,6 +27,10 @@ public class ItemService {
 
         return repository.addItem(newItem);
     }
+    
+    public boolean updateItem(Item updatedItem) {
+        return repository.updateItem(updatedItem);
+    }
 
     public Item findByTitle(String title) {
         return repository.getItems().values()

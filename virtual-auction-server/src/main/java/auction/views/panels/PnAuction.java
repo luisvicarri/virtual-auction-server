@@ -1,14 +1,13 @@
 package auction.views.panels;
 
-import auction.controllers.UserController;
 import auction.main.ServerAuctionApp;
 import auction.models.Bid;
 import auction.models.Item;
-import auction.models.User;
 import auction.utils.FontUtil;
 import auction.utils.ImageUtil;
 import auction.utils.UIUpdateManager;
 import auction.views.components.ScrollBarCustom;
+import auction.views.frames.Frame;
 import auction.views.panels.templates.Message;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -29,13 +29,11 @@ public class PnAuction extends javax.swing.JPanel {
 
     private final ImageUtil imageUtil;
     private final FontUtil fontUtil;
-    private final Item currentItem;
 
     public PnAuction(Item currentItem) {
         initComponents();
         imageUtil = new ImageUtil();
         fontUtil = new FontUtil();
-        this.currentItem = currentItem;
         customizeComponents();
         loadAuctionContent(currentItem);
 
@@ -60,8 +58,9 @@ public class PnAuction extends javax.swing.JPanel {
         String path = "views/fonts/Questrial-Regular.ttf";
 
         Map<JComponent, Float> components = Map.ofEntries(
+                Map.entry(lbItemTitle, 24f),
                 Map.entry(lbUsername, 18f),
-                Map.entry(lbAuction, 24f),
+                Map.entry(lbTitle, 18f),
                 Map.entry(lbBidNow, 18f),
                 Map.entry(lbWinningBidder, 18f),
                 Map.entry(lbBidIncrement, 14f),
@@ -69,7 +68,8 @@ public class PnAuction extends javax.swing.JPanel {
                 Map.entry(lbOpenningBid, 14f),
                 Map.entry(lbReservePrice, 14f),
                 Map.entry(lbTimer, 14f),
-                Map.entry(lbTitle, 18f),
+                Map.entry(lbAuction, 14f),
+                Map.entry(lbProducts, 14f),
                 Map.entry(tpDescription, 12f)
         );
 
@@ -85,7 +85,7 @@ public class PnAuction extends javax.swing.JPanel {
     }
 
     private void loadAuctionContent(Item currentItem) {
-        lbAuction.setText(currentItem.getData().getTitle());
+        lbItemTitle.setText(currentItem.getData().getTitle());
         lbBidIncrement.setText("Bid Increment: " + String.valueOf(currentItem.getData().getBidIncrement()));
         lbCurrentBid.setText("Current Bid: " + String.valueOf(currentItem.getCurrentBid()));
         lbOpenningBid.setText("Openning Bid: " + String.valueOf(currentItem.getOpeningBid()));
@@ -178,8 +178,10 @@ public class PnAuction extends javax.swing.JPanel {
         lbTimer = new javax.swing.JLabel();
         lbBidNow = new javax.swing.JLabel();
         lbWinningBidder = new javax.swing.JLabel();
-        lbAuction = new javax.swing.JLabel();
+        lbItemTitle = new javax.swing.JLabel();
         lbUsername = new javax.swing.JLabel();
+        lbProducts = new javax.swing.JLabel();
+        lbAuction = new javax.swing.JLabel();
         spMessageDisplay = new javax.swing.JScrollPane();
         pnMessageDisplay = new javax.swing.JPanel();
         lbBackground = new javax.swing.JLabel();
@@ -236,14 +238,35 @@ public class PnAuction extends javax.swing.JPanel {
         add(lbBidNow, new org.netbeans.lib.awtextra.AbsoluteConstraints(658, 413, 170, 47));
         add(lbWinningBidder, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 502, 378, 38));
 
-        lbAuction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        add(lbAuction, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 144, 378, 26));
+        lbItemTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        add(lbItemTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 144, 378, 26));
 
         lbUsername.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lbUsername.setForeground(new java.awt.Color(255, 255, 255));
         lbUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbUsername.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         add(lbUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(1061, 15, 120, 30));
+
+        lbProducts.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbProducts.setForeground(new java.awt.Color(255, 255, 255));
+        lbProducts.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbProducts.setText("Products");
+        lbProducts.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lbProducts.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lbProducts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbProductsMouseClicked(evt);
+            }
+        });
+        add(lbProducts, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 15, 120, 30));
+
+        lbAuction.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbAuction.setForeground(new java.awt.Color(255, 255, 255));
+        lbAuction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbAuction.setText("Auction");
+        lbAuction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lbAuction.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        add(lbAuction, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 15, 120, 30));
 
         spMessageDisplay.setBackground(new java.awt.Color(232, 232, 232));
         spMessageDisplay.setBorder(null);
@@ -272,8 +295,18 @@ public class PnAuction extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lbBidNowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBidNowMouseClicked
-//        ClientAuctionApp.frame.getAppController().getBiddingController().placeBid(currentItem);;
+        JOptionPane.showMessageDialog(
+                null,
+                "You cannot bid as an administrator",
+                "WARN",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }//GEN-LAST:event_lbBidNowMouseClicked
+
+    private void lbProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbProductsMouseClicked
+        Frame.pnProducts = new PnProducts();
+        ServerAuctionApp.frame.initNewPanel(Frame.pnProducts);
+    }//GEN-LAST:event_lbProductsMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbAuction;
@@ -281,9 +314,11 @@ public class PnAuction extends javax.swing.JPanel {
     private javax.swing.JLabel lbBidIncrement;
     private javax.swing.JLabel lbBidNow;
     private javax.swing.JLabel lbCurrentBid;
+    private javax.swing.JLabel lbItemTitle;
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbOpenningBid;
     private javax.swing.JLabel lbPhoto;
+    private javax.swing.JLabel lbProducts;
     private javax.swing.JLabel lbReservePrice;
     private javax.swing.JLabel lbTimer;
     private javax.swing.JLabel lbTitle;

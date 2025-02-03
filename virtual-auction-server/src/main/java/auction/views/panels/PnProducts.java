@@ -4,6 +4,7 @@ import auction.controllers.BiddingController;
 import auction.controllers.ItemController;
 import auction.dispatchers.MessageDispatcher;
 import auction.enums.AuctionStatus;
+import auction.enums.ItemStatus;
 import auction.main.ServerAuctionApp;
 import auction.models.Bid;
 import auction.models.Item;
@@ -72,7 +73,7 @@ public class PnProducts extends javax.swing.JPanel {
         ItemData data = new ItemData(
                 title,
                 description,
-                (reservePrice * 0.1), // Calcula o lance inicial como 10% do preço de reserva
+                (reservePrice * 0.5), // Calcula o lance inicial como 10% do preço de reserva
                 reservePrice,
                 duration,
                 image
@@ -110,7 +111,7 @@ public class PnProducts extends javax.swing.JPanel {
         // Se o repositório estiver vazio, carrega os produtos padrões
         List<Item> products = new ArrayList<>();
 
-        products.add(createItem("Tênis Nike Air Max", "Tênis esportivo de alta performance da Nike", 600, Duration.ofMinutes(5), "/views/products/imProduct01.png"));
+        products.add(createItem("Tênis Nike Air Max", "Tênis esportivo de alta performance da Nike", 100, Duration.ofSeconds(20), "/views/products/imProduct01.png"));
         products.add(createItem("Xbox Series S", "Console de videogame Xbox Series S com armazenamento de 512GB", 800, Duration.ofHours(1), "/views/products/imProduct02.png"));
         products.add(createItem("Apple Watch Series 10", "Relógio inteligente da Apple com monitoramento de saúde avançado", 1200, Duration.ofHours(2), "/views/products/imProduct03.png"));
         products.add(createItem("iPhone 15", "Smartphone Apple com design moderno e câmera aprimorada", 900, Duration.ofMinutes(30), "/views/products/imProduct04.png"));
@@ -170,41 +171,63 @@ public class PnProducts extends javax.swing.JPanel {
             bidNowLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {
-                    int option = JOptionPane.showConfirmDialog(
-                            null,
-                            "Do you really want to start the auction?",
-                            "Start Auction",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE
-                    );
 
-                    if (option == JOptionPane.YES_OPTION) {
-                        logger.info("Auction has been started.");
+                    if (ServerAuctionApp.frame.getAuction().getStatus() == AuctionStatus.WAITING) {
+                        int option = JOptionPane.showConfirmDialog(
+                                null,
+                                "Do you really want to start the auction?",
+                                "Start Auction",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE
+                        );
 
-                        JLabel clickedLabel = (JLabel) e.getSource();
-                        Item associatedItem = (Item) clickedLabel.getClientProperty("item");
+                        if (option == JOptionPane.YES_OPTION) {
 
-                        ServerAuctionApp.frame.getAuction().setStatus(AuctionStatus.ONGOING);
-                        ServerAuctionApp.frame.getAuction().setCurrentAuctionItem(associatedItem);
+                            JLabel clickedLabel = (JLabel) e.getSource();
+                            Item associatedItem = (Item) clickedLabel.getClientProperty("item");
 
-                        Response response = generateResponse(associatedItem);
+                            if (associatedItem.getStatus() == ItemStatus.COMPLETED) {
+                                JOptionPane.showMessageDialog(
+                                        null,
+                                        "This item has already been auctioned",
+                                        "WARN",
+                                        JOptionPane.INFORMATION_MESSAGE
+                                );
+                            } else {
+                                logger.info("Auction has been started");
 
-                        // Enviar a resposta serializada como JSON
-                        ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
+                                associatedItem.setStatus(ItemStatus.AUCTION);
+                                ServerAuctionApp.frame.getAuction().setStatus(AuctionStatus.ONGOING);
+                                ServerAuctionApp.frame.getAuction().setCurrentAuctionItem(associatedItem);
 
-                        MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
-                        ServerAuctionApp.frame.getAppController().getMulticastController().startListening(dispatcher::addMessage);
+                                Response response = generateResponse(associatedItem);
 
-                        Duration auctionDuration = associatedItem.getData().getAuctionDuration();
-                        ServerAuctionApp.frame.getAppController().getTimeController().startTimer(auctionDuration);
-                        ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
+                                // Enviar a resposta serializada como JSON
+                                ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
 
-                        Frame.pnAuction = new PnAuction(item);
-                        ServerAuctionApp.frame.initNewPanel(Frame.pnAuction);
+                                MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
+                                ServerAuctionApp.frame.getAppController().getMulticastController().startListening(dispatcher::addMessage);
 
-                    } else if (option == JOptionPane.NO_OPTION) {
-                        logger.info("Auction start has been cancelled.");
+                                Duration auctionDuration = associatedItem.getData().getAuctionDuration();
+                                ServerAuctionApp.frame.getAppController().getTimeController().startTimer(auctionDuration);
+                                ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
+
+                                Frame.pnAuction = new PnAuction(item);
+                                ServerAuctionApp.frame.initNewPanel(Frame.pnAuction);
+                            }
+
+                        } else if (option == JOptionPane.NO_OPTION) {
+                            logger.info("Auction start has been cancelled.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "There is already an auction in progress",
+                                "WARN",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
                     }
+
                 }
             });
 
@@ -323,6 +346,11 @@ public class PnProducts extends javax.swing.JPanel {
         lbProducts.setText("Products");
         lbProducts.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lbProducts.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lbProducts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbProductsMouseClicked(evt);
+            }
+        });
         add(lbProducts, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 15, 120, 30));
 
         lbOptions.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -353,10 +381,6 @@ public class PnProducts extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_lbDashboardMouseClicked
 
-    private void lbAuctionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAuctionMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lbAuctionMouseClicked
-
     private void lbOptionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbOptionsMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_lbOptionsMouseClicked
@@ -364,6 +388,26 @@ public class PnProducts extends javax.swing.JPanel {
     private void lbAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAddMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_lbAddMouseClicked
+
+    private void lbProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbProductsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbProductsMouseClicked
+
+    private void lbAuctionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAuctionMouseClicked
+        if (ServerAuctionApp.frame.getAuction().getStatus() == AuctionStatus.ONGOING) {
+            ServerAuctionApp.frame.getAuction().getCurrentAuctionItem().ifPresent(currentItem -> {
+                Frame.pnAuction = new PnAuction(currentItem);
+                ServerAuctionApp.frame.initNewPanel(Frame.pnAuction);
+            });
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "There are no auctions in progress",
+                    "WARN",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_lbAuctionMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbAdd;

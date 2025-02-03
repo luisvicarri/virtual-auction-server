@@ -24,4 +24,8 @@ public class ItemController {
     public Map<UUID, Item> getItems() {
         return service.getItems();
     }
+    
+    public boolean updateItem(Item updatedItem) {
+        return service.updateItem(updatedItem);
+    }
 }

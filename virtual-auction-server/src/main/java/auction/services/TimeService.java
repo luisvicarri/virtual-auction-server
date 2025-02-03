@@ -14,33 +14,53 @@ import org.slf4j.LoggerFactory;
 public class TimeService {
 
     private static final Logger logger = LoggerFactory.getLogger(TimeService.class);
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private final long INTERVAL_SECONDS = 1;
+    private static final long INTERVAL_SECONDS = 1;
     private Duration timeLeft;
 
-    private List<TimeListener> listeners = new ArrayList<>();
+    private final List<TimeListener> listeners = new ArrayList<>();
+    private volatile boolean running = false; // Flag para controlar o timer
+    private ScheduledExecutorService scheduler;
 
     public void startTimer(Duration duration) {
+        if (running) {
+            logger.warn("Timer is already running.");
+            return;
+        }
+
+        scheduler = Executors.newScheduledThreadPool(1);
+        running = true;
         timeLeft = duration;
 
         scheduler.scheduleWithFixedDelay(() -> {
-            if (timeLeft.isZero() || timeLeft.isNegative()) {
-                System.out.println("Auction ended.");
-                updateTime(Duration.ZERO);
-                scheduler.shutdown();
-            } else {
+            if (!running) {
+                return;
+            }
+            // Se o tempo restante for maior que 1 segundo, decrementa normalmente.
+            if (timeLeft.compareTo(Duration.ofSeconds(1)) > 0) {
                 timeLeft = timeLeft.minusSeconds(1);
                 updateTime(timeLeft);
+            } else {
+                // Se o tempo restante for 1 segundo ou menos, envia uma única atualização com zero e para o timer.
+                updateTime(Duration.ZERO);
+                running = false;  // Interrompe o timer
+                scheduler.shutdown();
+                logger.info("Auction ended. Timer stopped.");
             }
         }, 0, INTERVAL_SECONDS, TimeUnit.SECONDS);
-
     }
 
     private void updateTime(Duration timeLeft) {
-//        logger.info("Sending time update: {}s", timeLeft.getSeconds());
         Response response = new Response("TIME-UPDATE", "Updating time");
         response.addData("timeLeft", timeLeft.getSeconds());
         notifyTimeUpdate(timeLeft);
+    }
+
+    public void stopTimer() {
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdown();
+        }
+        running = false;
+        logger.info("Timer stopped.");
     }
 
     public void addListener(TimeListener listener) {

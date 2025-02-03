@@ -1,14 +1,16 @@
 package auction.models;
 
 import auction.enums.AuctionStatus;
+import java.util.Optional;
 
 public class Auction {
     
     private AuctionStatus status;
-    private Item currentAuctionItem;
+    private Optional<Item> currentAuctionItem;
 
     public Auction() {
         this.status = AuctionStatus.WAITING;
+        this.currentAuctionItem = Optional.empty();
     }
 
     public AuctionStatus getStatus() {
@@ -19,12 +21,11 @@ public class Auction {
         this.status = status;
     }
 
-    public Item getCurrentAuctionItem() {
+    public Optional<Item> getCurrentAuctionItem() {
         return currentAuctionItem;
     }
 
     public void setCurrentAuctionItem(Item currentAuctionItem) {
-        this.currentAuctionItem = currentAuctionItem;
+        this.currentAuctionItem = Optional.ofNullable(currentAuctionItem);
     }
-    
 }

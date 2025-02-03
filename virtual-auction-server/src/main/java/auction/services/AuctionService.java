@@ -2,17 +2,19 @@ package auction.services;
 
 import auction.controllers.BiddingController;
 import auction.enums.AuctionStatus;
+import auction.enums.ItemStatus;
 import auction.main.ServerAuctionApp;
 import auction.models.Bid;
 import auction.models.Item;
 import auction.models.dtos.Response;
 import auction.utils.JsonUtil;
 import auction.utils.UIUpdateManager;
+import auction.views.frames.Frame;
+import auction.views.panels.PnProducts;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,8 +36,6 @@ public class AuctionService {
                 logger.info("Mensagem ignorada: " + message);
                 return;
             }
-
-            JsonUtil.printFormattedJson(message);
 
             // Desserializa a mensagem para um objeto Response
             Response response = mapper.readValue(message, Response.class);
@@ -116,15 +116,16 @@ public class AuctionService {
     public void clientConnected(String message) {
         if (ServerAuctionApp.frame.getAuction().getStatus() == AuctionStatus.ONGOING) {
 
-            Item currentItem = ServerAuctionApp.frame.getAuction().getCurrentAuctionItem();
-            Response response = new Response("AUCTION-INFO", "Auction in progress");
-            response.addData("item", currentItem);
+            ServerAuctionApp.frame.getAuction().getCurrentAuctionItem().ifPresent(currentItem -> {
+                Response response = new Response("AUCTION-INFO", "Auction in progress");
+                response.addData("item", currentItem);
 
-            BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
-            List<Bid> bids = biddingController.getBidsForItem(currentItem.getId());
-            response.addData("bids", bids);
+                BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
+                List<Bid> bids = biddingController.getBidsForItem(currentItem.getId());
+                response.addData("bids", bids);
 
-            ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
+                ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
+            });
         }
 
         try {
@@ -137,7 +138,6 @@ public class AuctionService {
 
     public void displayNewBid(String message) {
         try {
-            JsonUtil.printFormattedJson(message);
             Response response = mapper.readValue(message, Response.class);
 
             response.getData().ifPresent(data -> {
@@ -192,6 +192,15 @@ public class AuctionService {
                     );
 
                     UIUpdateManager.getTimeUpdater().accept(formattedDuration);
+
+                    if (duration.isZero()) {
+                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                                null,
+                                "The auction has closed.",
+                                "INFO",
+                                JOptionPane.INFORMATION_MESSAGE)
+                        );
+                    }
                 }
             });
         } catch (JsonProcessingException ex) {
@@ -199,4 +208,53 @@ public class AuctionService {
         }
     }
 
+    public void auctionEnded(String message) {
+        try {
+            if (!message.trim().startsWith("{")) {
+                logger.info("Message ignored:" + message);
+                return;
+            }
+
+            JsonUtil.printFormattedJson(message);
+            Response response = mapper.readValue(message, Response.class);
+            if (response.getMessage().equals("Auction closed")) {
+                response.getData().ifPresent(data -> {
+                    Object itemObject = data.get("finalItem");
+                    Item finalItem = mapper.convertValue(itemObject, Item.class);
+                    Item currentItem = ServerAuctionApp.frame.getAppController().getItemController().findById(finalItem.getId());
+
+                    String messageToSend = "";
+                    if (finalItem.getCurrentBid() < finalItem.getData().getReservePrice()) {
+                        messageToSend = "The bid did not reach the requested amount";
+                        currentItem.setStatus(ItemStatus.CANCELLED);
+                    } else {
+                        messageToSend = "Congratulations you made the winning bid";
+                        currentItem.setWinningBidder(finalItem.getWinningBidder());
+                        currentItem.setStatus(ItemStatus.COMPLETED);
+                        
+                        boolean updated = ServerAuctionApp.frame.getAppController().getItemController().updateItem(currentItem);
+                        if (updated) {
+                            logger.info("Item updated successfully");
+                        } else {
+                            logger.warn("Failed to update item");
+                        }
+
+                    }
+
+                    Response auctionEnded = new Response("AUCTION-ENDED", messageToSend);
+                    auctionEnded.addData("bidderId", finalItem.getWinningBidder());
+                    ServerAuctionApp.frame.getAppController().getMulticastController().send(auctionEnded);
+
+                    ServerAuctionApp.frame.getAuction().setStatus(AuctionStatus.WAITING);
+                    ServerAuctionApp.frame.getAuction().setCurrentAuctionItem(null);
+
+                    Frame.pnProducts = new PnProducts();
+                    ServerAuctionApp.frame.initNewPanel(Frame.pnProducts);
+
+                });
+            }
+        } catch (JsonProcessingException ex) {
+            logger.error("Error processing auction message.", ex);
+        }
+    }
 }

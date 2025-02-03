@@ -15,11 +15,12 @@ public class Frame extends javax.swing.JFrame {
     private final AppController appController;
     private final Auction auction;
     
-    public static PnProducts products;
+    public static PnProducts pnProducts;
     public static PnAuction pnAuction;
 
     public Frame(AppController appController) {
-        initComponents();this.appController = appController;
+        initComponents();
+        this.appController = appController;
         auction = new Auction();
     }
 
@@ -34,8 +35,8 @@ public class Frame extends javax.swing.JFrame {
     public void start() {
         this.setLayout(new BorderLayout());
 
-        products = new PnProducts();
-        initNewPanel(products);
+        pnProducts = new PnProducts();
+        initNewPanel(pnProducts);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
