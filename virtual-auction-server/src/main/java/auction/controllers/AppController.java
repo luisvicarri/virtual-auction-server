@@ -1,8 +1,10 @@
 package auction.controllers;
 
 import auction.dispatchers.MessageDispatcher;
+import auction.handlers.BidUpdated;
 import auction.handlers.ClientConnected;
 import auction.handlers.PlaceBid;
+import auction.handlers.TimeUpdate;
 import auction.repositories.BiddingRepository;
 import auction.repositories.ItemRepository;
 import auction.repositories.UserRepository;
@@ -39,6 +41,8 @@ public final class AppController {
         MessageDispatcher dispatcher = getMulticastController().getDispatcher();
         dispatcher.registerHandler("CLIENT-CONNECTED", new ClientConnected(new AuctionService()));
         dispatcher.registerHandler("NEW-BID", new PlaceBid(new AuctionService()));
+        dispatcher.registerHandler("BID-UPDATED", new BidUpdated(new AuctionService()));
+        dispatcher.registerHandler("TIME-UPDATE", new TimeUpdate(new AuctionService()));
     }
     
     private ItemController configItemController() {

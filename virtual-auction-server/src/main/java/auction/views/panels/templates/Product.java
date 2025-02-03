@@ -34,7 +34,7 @@ public class Product extends javax.swing.JPanel {
 
         fontUtil.applyFont(components, path);
         
-        ImageIcon originalIcon = imageUtil.createImageIcon("/views/icons/icTimer.png");
+        ImageIcon originalIcon = imageUtil.createImageIcon("/views/icons/icWhiteTimer.png");
         ImageIcon resizedIcon = imageUtil.resizeIcon(originalIcon, 19, 19);
         lbDuration.setIcon(resizedIcon);
     }

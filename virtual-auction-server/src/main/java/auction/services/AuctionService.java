@@ -7,13 +7,18 @@ import auction.models.Bid;
 import auction.models.Item;
 import auction.models.dtos.Response;
 import auction.utils.JsonUtil;
+import auction.utils.UIUpdateManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +115,7 @@ public class AuctionService {
 
     public void clientConnected(String message) {
         if (ServerAuctionApp.frame.getAuction().getStatus() == AuctionStatus.ONGOING) {
-            
+
             Item currentItem = ServerAuctionApp.frame.getAuction().getCurrentAuctionItem();
             Response response = new Response("AUCTION-INFO", "Auction in progress");
             response.addData("item", currentItem);
@@ -129,4 +134,69 @@ public class AuctionService {
             logger.error("Error processing CLIENT-CONNECTED message: {}", message, e);
         }
     }
+
+    public void displayNewBid(String message) {
+        try {
+            JsonUtil.printFormattedJson(message);
+            Response response = mapper.readValue(message, Response.class);
+
+            response.getData().ifPresent(data -> {
+
+                UUID itemId = mapper.convertValue(data.get("itemId"), UUID.class);
+                List<Map<String, Object>> bids = (List<Map<String, Object>>) data.get("bids");
+
+                if (bids != null) {
+                    // Atualizar a interface do leilão do servidor
+                    List<Bid> updatedBids = ServerAuctionApp.frame.getAppController().getBiddingController().getBidsForItem(itemId);
+                    UIUpdateManager.getBidListUpdater().accept(updatedBids);
+
+                    Bid lastBid = updatedBids.get(updatedBids.size() - 1);
+                    UIUpdateManager.getWinningBidderUpdater().accept("Winning Bidder: " + lastBid.getBidderName());
+                    UIUpdateManager.getCurrentBidUpdater().accept("Current Bid: " + lastBid.getAmount());
+
+                    // Atualizar o valor atual do item no servidor
+                    Item currentItem = ServerAuctionApp.frame.getAppController().getItemController().findById(itemId);
+                    if (currentItem != null) {
+                        double currentBid = currentItem.getCurrentBid();
+                        double bidIncrement = currentItem.getData().getBidIncrement();
+                        currentItem.setCurrentBid(currentBid + bidIncrement);
+                        logger.info("Current bid updated to {}", currentItem.getCurrentBid());
+                    }
+
+                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "User " + lastBid.getBidderName() + " placed a bid", "INFO", JOptionPane.INFORMATION_MESSAGE));
+                    logger.debug("User: {} placed a bid.", lastBid.getBidderName());
+
+                }
+            });
+        } catch (JsonProcessingException ex) {
+            logger.error("Error parsing message {} to json", message, ex);
+        }
+    }
+
+    public void updateTime(String message) {
+        try {
+            Response response = mapper.readValue(message, Response.class);
+            response.getData().ifPresent(data -> {
+                Object timeObj = data.get("timeLeft");
+                if (timeObj instanceof Number number) {
+                    long timeLeftSeconds = number.longValue(); // Obtém o tempo em segundos
+
+                    // Converte para Duration
+                    Duration duration = Duration.ofSeconds(timeLeftSeconds);
+
+                    // Formata para o padrão hh:mm:ss
+                    String formattedDuration = String.format("%02dhrs : %02dmins : %02dsecs",
+                            duration.toHours(),
+                            duration.toMinutesPart(),
+                            duration.toSecondsPart()
+                    );
+
+                    UIUpdateManager.getTimeUpdater().accept(formattedDuration);
+                }
+            });
+        } catch (JsonProcessingException ex) {
+            logger.error("Error desserializing json", ex);
+        }
+    }
+
 }

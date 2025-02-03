@@ -2,7 +2,8 @@ package auction.views.frames;
 
 import auction.controllers.AppController;
 import auction.models.Auction;
-import auction.views.panels.Products;
+import auction.views.panels.PnAuction;
+import auction.views.panels.PnProducts;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -12,8 +13,10 @@ import javax.swing.JTextField;
 public class Frame extends javax.swing.JFrame {
 
     private final AppController appController;
-    public static Products products;
     private final Auction auction;
+    
+    public static PnProducts products;
+    public static PnAuction pnAuction;
 
     public Frame(AppController appController) {
         initComponents();this.appController = appController;
@@ -31,7 +34,7 @@ public class Frame extends javax.swing.JFrame {
     public void start() {
         this.setLayout(new BorderLayout());
 
-        products = new Products();
+        products = new PnProducts();
         initNewPanel(products);
         this.setLocationRelativeTo(null);
         this.setVisible(true);

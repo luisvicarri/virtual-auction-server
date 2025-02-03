@@ -12,6 +12,7 @@ import auction.models.dtos.Response;
 import auction.utils.FontUtil;
 import auction.utils.ImageUtil;
 import auction.views.components.ScrollBarCustom;
+import auction.views.frames.Frame;
 import auction.views.panels.templates.Product;
 import java.awt.Dimension;
 import java.time.Duration;
@@ -23,15 +24,16 @@ import java.util.UUID;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 
-public class Products extends javax.swing.JPanel {
+public class PnProducts extends javax.swing.JPanel {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Products.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PnProducts.class);
     private final ImageUtil imageUtil;
     private final FontUtil fontUtil;
 
-    public Products() {
+    public PnProducts() {
         initComponents();
         imageUtil = new ImageUtil();
         fontUtil = new FontUtil();
@@ -168,24 +170,41 @@ public class Products extends javax.swing.JPanel {
             bidNowLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {
-                    JLabel clickedLabel = (JLabel) e.getSource();
-                    Item associatedItem = (Item) clickedLabel.getClientProperty("item");
-                    
-                    ServerAuctionApp.frame.getAuction().setStatus(AuctionStatus.ONGOING);
-                    ServerAuctionApp.frame.getAuction().setCurrentAuctionItem(associatedItem);
-                    
-                    Response response = generateResponse(associatedItem);
+                    int option = JOptionPane.showConfirmDialog(
+                            null,
+                            "Do you really want to start the auction?",
+                            "Start Auction",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
+                    );
 
-                    // Enviar a resposta serializada como JSON
-                    ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
+                    if (option == JOptionPane.YES_OPTION) {
+                        logger.info("Auction has been started.");
 
-                    MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
-                    ServerAuctionApp.frame.getAppController().getMulticastController().startListening(dispatcher::addMessage);
+                        JLabel clickedLabel = (JLabel) e.getSource();
+                        Item associatedItem = (Item) clickedLabel.getClientProperty("item");
 
-                    Duration auctionDuration = associatedItem.getData().getAuctionDuration();
-                    ServerAuctionApp.frame.getAppController().getTimeController().startTimer(auctionDuration);
-                    ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
+                        ServerAuctionApp.frame.getAuction().setStatus(AuctionStatus.ONGOING);
+                        ServerAuctionApp.frame.getAuction().setCurrentAuctionItem(associatedItem);
 
+                        Response response = generateResponse(associatedItem);
+
+                        // Enviar a resposta serializada como JSON
+                        ServerAuctionApp.frame.getAppController().getMulticastController().send(response);
+
+                        MessageDispatcher dispatcher = ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher();
+                        ServerAuctionApp.frame.getAppController().getMulticastController().startListening(dispatcher::addMessage);
+
+                        Duration auctionDuration = associatedItem.getData().getAuctionDuration();
+                        ServerAuctionApp.frame.getAppController().getTimeController().startTimer(auctionDuration);
+                        ServerAuctionApp.frame.getAppController().getMulticastController().send(associatedItem);
+
+                        Frame.pnAuction = new PnAuction(item);
+                        ServerAuctionApp.frame.initNewPanel(Frame.pnAuction);
+
+                    } else if (option == JOptionPane.NO_OPTION) {
+                        logger.info("Auction start has been cancelled.");
+                    }
                 }
             });
 
@@ -218,7 +237,7 @@ public class Products extends javax.swing.JPanel {
         BiddingController biddingController = ServerAuctionApp.frame.getAppController().getBiddingController();
         List<Bid> bids = biddingController.getBidsForItem(associatedItem.getId());
         response.addData("bids", bids);
-        
+
         return response;
     }
 
