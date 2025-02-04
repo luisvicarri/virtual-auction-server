@@ -62,7 +62,8 @@ public class UserServiceStub {
             Request request = mapper.readValue(requestJson, Request.class);
 
             if ("SIGN-UP".equals(request.getAction())) {
-                UUID id = service.insert(request.getName(), request.getPassword());
+                UUID id = service.insert(request.getName(), request.getPassword(), request.getEncodedPublicKey()
+                        .orElseThrow(() -> new IllegalArgumentException("Encoded public key is required")));
                 logger.info("User registered successfully: {}", id.toString());
                 return mapper.writeValueAsString(new Response("SUCCESS", id.toString()));
 

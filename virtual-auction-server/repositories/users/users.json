@@ -1,12 +1,7 @@
 {
-  "ebae1820-e61c-4c02-9542-3959084d872c" : {
-    "id" : "ebae1820-e61c-4c02-9542-3959084d872c",
-    "name" : "Admin",
-    "hashedPassword" : "$2a$10$OGUssnCTnqJwWweMUETCquGclj7Cwj2A71Zp5XP.GiW3elZJgokxW"
-  },
-  "869d6dd6-138e-4438-8bd6-af071ef511f3" : {
-    "id" : "869d6dd6-138e-4438-8bd6-af071ef511f3",
+  "9c5eca44-bd8f-4ea1-b1f8-2ac80cbbd9ef" : {
+    "id" : "9c5eca44-bd8f-4ea1-b1f8-2ac80cbbd9ef",
     "name" : "Test",
-    "hashedPassword" : "$2a$10$HPzdXP6zYF3yzSBxsjMdh..xZ/fn9/KnVfLWreNgSZpXp4tx5nura"
+    "hashedPassword" : "$2a$10$.z52ams3LLqi.vi.8/68XOOzfHny70H3ewozGaemPv.8bgmjZd/S2"
   }
 }

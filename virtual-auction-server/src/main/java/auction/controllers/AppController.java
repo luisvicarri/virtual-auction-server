@@ -9,6 +9,9 @@ import auction.handlers.TimeUpdate;
 import auction.repositories.BiddingRepository;
 import auction.repositories.ItemRepository;
 import auction.repositories.UserRepository;
+import auction.security.KeyController;
+import auction.security.KeyRepository;
+import auction.security.KeyService;
 import auction.services.AuctionService;
 import auction.services.BiddingService;
 import auction.services.ItemService;
@@ -19,12 +22,14 @@ import auction.stubs.UserServiceStub;
 
 public final class AppController {
 
+    private final ServerController serverController;
     private final UserController userController;
     private final UserServiceStub userStub;
     private final MulticastController multicastController;
     private final TimeController timeController;
     private final BiddingController biddingController;
     private final ItemController itemController;
+    private final KeyController keyController;
 
     public AppController() {
         this.userController = configUserController();
@@ -34,7 +39,9 @@ public final class AppController {
         this.timeController.addListener(multicastController);
         this.biddingController = configBiddingController();
         this.itemController = configItemController();
-        
+        this.keyController = configKeyController();
+        this.serverController = new ServerController(this.keyController);
+
         addHandlers();
     }
 
@@ -46,13 +53,19 @@ public final class AppController {
         dispatcher.registerHandler("TIME-UPDATE", new TimeUpdate(new AuctionService()));
         dispatcher.registerHandler("AUCTION-ENDED", new AuctionEnded(new AuctionService()));
     }
+
+    private KeyController configKeyController() {
+        KeyRepository repository = new KeyRepository();
+        KeyService service = new KeyService(repository);
+        return new KeyController(service);
+    }
     
     private ItemController configItemController() {
         ItemRepository repository = new ItemRepository();
         ItemService service = new ItemService(repository);
         return new ItemController(service);
     }
-    
+
     private BiddingController configBiddingController() {
         BiddingRepository repository = new BiddingRepository();
         BiddingService service = new BiddingService(repository);
@@ -103,6 +116,14 @@ public final class AppController {
 
     public ItemController getItemController() {
         return itemController;
+    }
+
+    public ServerController getServerController() {
+        return serverController;
+    }
+
+    public KeyController getKeyController() {
+        return keyController;
     }
 
 }

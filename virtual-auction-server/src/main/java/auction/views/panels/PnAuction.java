@@ -236,6 +236,8 @@ public class PnAuction extends javax.swing.JPanel {
             }
         });
         add(lbBidNow, new org.netbeans.lib.awtextra.AbsoluteConstraints(658, 413, 170, 47));
+
+        lbWinningBidder.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         add(lbWinningBidder, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 502, 378, 38));
 
         lbItemTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -243,9 +245,9 @@ public class PnAuction extends javax.swing.JPanel {
 
         lbUsername.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lbUsername.setForeground(new java.awt.Color(255, 255, 255));
-        lbUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbUsername.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbUsername.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        add(lbUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(1061, 15, 120, 30));
+        add(lbUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(1056, 15, 120, 30));
 
         lbProducts.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lbProducts.setForeground(new java.awt.Color(255, 255, 255));

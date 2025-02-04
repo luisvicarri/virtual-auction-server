@@ -12,7 +12,8 @@ public class MulticastController implements TimeListener {
     private final MessageDispatcher dispatcher;
 
     public MulticastController(MulticastService service) {
-        this.service = service;this.dispatcher = new MessageDispatcher();
+        this.service = service;
+        this.dispatcher = new MessageDispatcher();
     }
 
     public MessageDispatcher getDispatcher() {

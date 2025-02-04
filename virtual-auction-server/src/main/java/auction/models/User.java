@@ -1,23 +1,27 @@
 package auction.models;
 
+import auction.main.ServerAuctionApp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.security.PublicKey;
 import java.util.UUID;
 
 public class User {
-    
+
     private UUID id;
     private String name;
     private String hashedPassword;
     
     @JsonIgnore
     private String plainPassword;
+    private String encodedPublicKey;
 
     public User() {
     }
 
-    public User(String name, String hashedPassword) {
+    public User(String name, String hashedPassword, String encodedPublicKey) {
         this.name = name;
         this.hashedPassword = hashedPassword;
+        this.encodedPublicKey = encodedPublicKey;
     }
 
     public UUID getId() {
@@ -40,16 +44,12 @@ public class User {
         return plainPassword;
     }
 
-    public void setPlainPassword(String plainPassword) {
-        this.plainPassword = plainPassword;
-    }
-
     public String getHashedPassword() {
         return hashedPassword;
     }
-
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    
+    @JsonIgnore
+    public PublicKey getPublicKey() {
+        return ServerAuctionApp.frame.getAppController().getKeyController().getPublicKey(encodedPublicKey);
     }
-
 }

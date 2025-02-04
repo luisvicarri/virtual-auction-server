@@ -37,12 +37,12 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public UUID insert(String name, String hashedPassword) {
+    public UUID insert(String name, String hashedPassword, String encodedPublicKey) {
         if (repository.findByUsername(name).isPresent()) {
             return null;
         }
 
-        User newUser = new User(name, hashedPassword);
+        User newUser = new User(name, hashedPassword, encodedPublicKey);
         return repository.addUser(newUser);
     }
 }
