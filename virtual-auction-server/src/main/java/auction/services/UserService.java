@@ -4,6 +4,7 @@ import auction.models.User;
 import auction.repositories.UserRepository;
 import auction.services.interfaces.UserServiceInterface;
 import auction.utils.PasswordUtil;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,6 +16,10 @@ public class UserService implements UserServiceInterface {
         this.repository = repository;
     }
 
+    public Map<UUID, User> getUsers() {
+        return repository.getUsers();
+    }
+    
     public Optional<User> findById(UUID id) {
         return repository.findById(id);
     }

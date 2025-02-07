@@ -13,16 +13,13 @@ import java.util.logging.Logger;
 public class Seeding {
 
     private final AppController appController;
-    private static final Set<String> connectedClients = new HashSet<>();
 
     public Seeding(AppController appController) {
         this.appController = appController;
     }
 
     public void start() {
-//        MessageDispatcher dispatcher = appController.getMulticastController().getDispatcher();
-//        dispatcher.registerHandler("CLIENT_CONNECTED", new ClientConnected(new AuctionService()));
-        
+
         new Thread(() -> {
             try {
                 appController.getUserStub().startListening();
@@ -30,20 +27,6 @@ public class Seeding {
                 Logger.getLogger(Seeding.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
-
-//        new Thread(() -> {
-//            appController.getMulticastController().connect();
-//            
-//            System.out.println("Servidor aguardando conexões de clientes...");
-//            while (connectedClients.isEmpty()) {
-//                String message = appController.getMulticastController().receiveString();
-//                if ("CLIENT_CONNECTED".equals(message)) {
-//                    connectedClients.add(message); // Registra o cliente conectado
-//                    System.out.println("Cliente conectado! Total de clientes: " + connectedClients.size());
-//                    
-//                }
-//            }
-//        }).start();
 
         new Thread(() -> {
             appController.getMulticastController().connect();
@@ -56,5 +39,4 @@ public class Seeding {
             }
         }).start();
     }
-
 }

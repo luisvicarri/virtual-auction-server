@@ -2,6 +2,7 @@ package auction.controllers;
 
 import auction.models.User;
 import auction.services.UserService;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,8 +14,8 @@ public class UserController {
         this.service = service;
     }
     
-    public void signUp(User newUser) {
-        
+    public Map<UUID, User> getUsers() {
+        return service.getUsers();
     }
     
     public Optional<User> findById(UUID id) {

@@ -22,6 +22,7 @@ import auction.stubs.UserServiceStub;
 
 public final class AppController {
 
+    private final UserRepository userRepository;
     private final ServerController serverController;
     private final UserController userController;
     private final UserServiceStub userStub;
@@ -32,6 +33,8 @@ public final class AppController {
     private final KeyController keyController;
 
     public AppController() {
+        this.userRepository = new UserRepository();
+        
         this.userController = configUserController();
         this.userStub = configUserStub();
         this.multicastController = configMulticastController();
@@ -83,14 +86,12 @@ public final class AppController {
     }
 
     private UserController configUserController() {
-        UserRepository repository = new UserRepository();
-        UserService service = new UserService(repository);
+        UserService service = new UserService(userRepository);
         return new UserController(service);
     }
 
     private UserServiceStub configUserStub() {
-        UserRepository repository = new UserRepository();
-        UserService service = new UserService(repository);
+        UserService service = new UserService(userRepository);
         return new UserServiceStub(service);
     }
 

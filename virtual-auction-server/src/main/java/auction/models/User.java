@@ -52,4 +52,9 @@ public class User {
     public PublicKey getPublicKey() {
         return ServerAuctionApp.frame.getAppController().getKeyController().getPublicKey(encodedPublicKey);
     }
+
+    public String getEncodedPublicKey() {
+        return encodedPublicKey;
+    }
+    
 }
