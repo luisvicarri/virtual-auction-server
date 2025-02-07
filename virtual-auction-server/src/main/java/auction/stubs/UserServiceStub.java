@@ -15,7 +15,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
-import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
@@ -38,7 +37,7 @@ public class UserServiceStub {
     }
 
     public void startListening() throws IOException {
-        try ( ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Server started on port {}", port);
 
             while (true) {
@@ -51,16 +50,16 @@ public class UserServiceStub {
                     logger.info("Received signature: {}", signature);
 
                     String responseJson = handleRequest(requestJson, signature);
-//                    // Assinar a resposta
-//                    String responseSignature = signResponse(responseJson);
+                    // Assinar a resposta
+                    String responseSignature = signResponse(responseJson);
 
                     logger.info("Sending response: {}", responseJson);
                     out.println(responseJson);
-//                    if (signature != null) {
-//                        out.println(responseSignature);
-//                    } else {
-//                        out.println();
-//                    }
+                    if (signature != null) {
+                        out.println(responseSignature);
+                    } else {
+                        out.println();
+                    }
 
                 } catch (Exception ex) {
                     logger.error("Error processing client request", ex);
