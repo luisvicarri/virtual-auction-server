@@ -15,6 +15,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
+import java.security.PublicKey;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -40,9 +42,7 @@ public class UserServiceStub {
             logger.info("Server started on port {}", port);
 
             while (true) {
-                try (Socket clientSocket = serverSocket.accept();
-                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+                try ( Socket clientSocket = serverSocket.accept();  BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));  PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
                     logger.info("Connection established with client: {}", clientSocket.getRemoteSocketAddress());
 
                     String requestJson = in.readLine();
@@ -51,8 +51,16 @@ public class UserServiceStub {
                     logger.info("Received signature: {}", signature);
 
                     String responseJson = handleRequest(requestJson, signature);
+//                    // Assinar a resposta
+//                    String responseSignature = signResponse(responseJson);
+
                     logger.info("Sending response: {}", responseJson);
                     out.println(responseJson);
+//                    if (signature != null) {
+//                        out.println(responseSignature);
+//                    } else {
+//                        out.println();
+//                    }
 
                 } catch (Exception ex) {
                     logger.error("Error processing client request", ex);
@@ -124,6 +132,7 @@ public class UserServiceStub {
                 "User registered successfully"
         );
         response.addData("userId", id.toString());
+        response.addData("server-public-key", getEncodedServerPublicKey());
 
         return mapper.writeValueAsString(response);
     }
@@ -143,12 +152,7 @@ public class UserServiceStub {
             return createErrorResponse("Missing required fields");
         }
 
-        boolean found = service.signIn(
-                userId,
-                username,
-                password
-        );
-
+        boolean found = service.signIn(userId, username, password);
         if (found) {
             logger.info("User found successfully: {}", userId.toString());
             Response response = new Response(
@@ -177,5 +181,15 @@ public class UserServiceStub {
             logger.error("Critical failure serializing error response", ex);
             return "{\"status\": \"FAILED\", \"message\": \"Critical failure\"}";
         }
+    }
+
+    private String getEncodedServerPublicKey() {
+        return Base64.getEncoder().encodeToString(
+                ServerAuctionApp.frame.getAppController()
+                        .getServerController()
+                        .getKeyPair()
+                        .getPublic()
+                        .getEncoded()
+        );
     }
 }

@@ -12,7 +12,9 @@ public class KeyController {
     }
     
     public void generateKeyPair() {
-        service.generateKeyPair();
+        if (service.loadKeys() == null) {
+            service.generateKeyPair();
+        }
     }
     
     public KeyPair loadKeys() {
