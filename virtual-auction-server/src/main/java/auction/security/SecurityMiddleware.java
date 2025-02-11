@@ -62,21 +62,4 @@ public class SecurityMiddleware {
         }
         return isValid;
     }
-
-    /**
-     * Verifica a assinatura de uma requisição utilizando a chave pública do
-     * servidor.
-     */
-    public boolean verifyRequestWithPublicKey(String data, String signature, PublicKey publicKey) {
-        logger.info("Verifying request signature with server public key");
-        boolean isValid = dSignatureUtil.verifySignature(data, signature, publicKey);
-
-        if (isValid) {
-            logger.info("Signature verification successful with server public key");
-        } else {
-            logger.warn("Signature verification failed with server public key");
-        }
-        return isValid;
-    }
-
 }

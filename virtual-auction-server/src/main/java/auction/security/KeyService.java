@@ -1,13 +1,9 @@
 package auction.security;
 
-import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,41 +11,63 @@ public class KeyService {
     
     private static final Logger logger = LoggerFactory.getLogger(KeyService.class);
     private final KeyRepository repository;
+    private final AsymmetricUtil asymmetricUtil;
+    private final SymmetricUtil symmetricUtil;
 
     public KeyService(KeyRepository repository) {
         this.repository = repository;
+        this.asymmetricUtil = new AsymmetricUtil();
+        this.symmetricUtil = new SymmetricUtil();
     }
     
-    public void generateKeyPair() {
+    public void generateAsymmetricKeys() {
         try {
-            logger.info("Generating RSA key pair...");
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-            keyGen.initialize(4096);
-            KeyPair keyPair = keyGen.generateKeyPair();
-            
-            repository.saveKeys(keyPair);
+            KeyPair keyPair = asymmetricUtil.generateRSAKeyPair();
+            repository.saveAsymmetricKeys(keyPair);
             logger.info("RSA key pair successfully generated and saved.");
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error("Failed to generate RSA key pair: Algorithm not found", ex);
+        } catch (Exception ex) {
+            logger.error("Failed to generate RSA key pair", ex);
         }
     }
     
-    public KeyPair loadKeys() {
-        return repository.loadKeys();
+    public KeyPair loadAsymmetricKeys() {
+        return repository.loadAsymmetricKeys();
     }
     
     public PublicKey getPublicKey(String encodedPublicKey) {
         try {
-            byte[] keyBytes = Base64.getDecoder().decode(encodedPublicKey);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            return keyFactory.generatePublic(new X509EncodedKeySpec(keyBytes));
-        } catch (IllegalArgumentException ex) {
-            logger.error("Failed to decode public key: Invalid Base64 encoding", ex);
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error("Failed to get public key: RSA algorithm not found", ex);
-        } catch (InvalidKeySpecException ex) {
-            logger.error("Failed to generate public key: Invalid key specification", ex);
+            return asymmetricUtil.decodePublicKey(encodedPublicKey);
+        } catch (Exception ex) {
+            logger.error("Failed to decode public key", ex);
+            return null;
         }
-        return null;
+    }
+    
+    public void generateSymmetricKey() {
+        try {
+            SecretKey secretKey = symmetricUtil.generateAESKey();
+            repository.saveSymmetricKey(secretKey);
+            logger.info("AES symmetric key successfully generated and saved.");
+        } catch (Exception ex) {
+            logger.error("Failed to generate AES symmetric key", ex);
+        }
+    }
+
+    public SecretKey loadSymmetricKey() {
+        return repository.loadSymmetricKey();
+    }
+    
+    public byte[] loadIV() {
+        return repository.loadIV();
+    }
+    
+    public void generateIV() {
+        try {
+            IvParameterSpec newIV = symmetricUtil.generateIV();
+            repository.saveIV(newIV.getIV());
+            logger.info("IV successfully generated and saved.");
+        } catch (Exception ex) {
+            logger.error("Failed to generate IV", ex);
+        }
     }
 }

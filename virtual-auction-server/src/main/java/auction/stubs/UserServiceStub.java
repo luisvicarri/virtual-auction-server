@@ -159,6 +159,11 @@ public class UserServiceStub {
                     "User found successfully"
             );
             response.addData("MULTICAST_ADDRESS", ConfigManager.get("MULTICAST_ADDRESS"));
+            byte[] encodedSymmetricKey = ServerAuctionApp.frame.getAppController()
+                    .getServerController()
+                    .getSymmetricKey()
+                    .getEncoded();
+            response.addData("symmetricKey", encodedSymmetricKey);
             return mapper.writeValueAsString(response);
         }
 

@@ -13,7 +13,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
+import javax.crypto.SecretKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +27,13 @@ public class KeyRepository {
 
     public KeyRepository() {
     }
-  
+
     /**
      * Saves the server keys to a JSON file if necessary.
      *
      * @param keyPair The server key pair.
      */
-    public void saveKeys(KeyPair keyPair) {
+    public void saveAsymmetricKeys(KeyPair keyPair) {
         try {
             // Converting the keys to Base64
             String encodedPrivateKey = Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
@@ -65,7 +67,7 @@ public class KeyRepository {
      *
      * @return The server key pair or {@code null} if there is an error.
      */
-    public KeyPair loadKeys() {
+    public KeyPair loadAsymmetricKeys() {
         if (!file.exists()) {
             logger.warn("Server key file does not exist.");
             return null;
@@ -101,4 +103,91 @@ public class KeyRepository {
 
         return null;
     }
+
+    public void saveSymmetricKey(SecretKey secretKey) {
+        try {
+            String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+
+            Map<String, String> keysMap;
+            if (file.exists()) {
+                keysMap = mapper.readValue(file, Map.class);
+            } else {
+                keysMap = new HashMap<>();
+            }
+
+            keysMap.put("symmetricKey", encodedKey);
+
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, keysMap);
+            logger.info("AES symmetric key saved successfully.");
+        } catch (IOException ex) {
+            logger.error("Error saving AES symmetric key: {}", ex.getMessage(), ex);
+        }
+    }
+
+    public SecretKey loadSymmetricKey() {
+        if (!file.exists()) {
+            logger.warn("Server key file does not exist.");
+            return null;
+        }
+
+        try {
+            Map<String, String> keysMap = mapper.readValue(file, Map.class);
+            String encodedKey = keysMap.get("symmetricKey");
+
+            if (encodedKey == null) {
+                logger.warn("No symmetric key found in file.");
+                return null;
+            }
+
+            return new SymmetricUtil().decodeKey(encodedKey);
+        } catch (IOException ex) {
+            logger.error("Error loading AES symmetric key: {}", ex.getMessage(), ex);
+        }
+
+        return null;
+    }
+
+    public void saveIV(byte[] iv) {
+        try {
+            String encodedIV = Base64.getEncoder().encodeToString(iv);
+
+            Map<String, String> keysMap;
+            if (file.exists()) {
+                keysMap = mapper.readValue(file, Map.class);
+            } else {
+                keysMap = new HashMap<>();
+            }
+
+            keysMap.put("iv", encodedIV);
+
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, keysMap);
+            logger.info("AES IV saved successfully.");
+        } catch (IOException ex) {
+            logger.error("Error saving IV: {}", ex.getMessage(), ex);
+        }
+    }
+
+    public byte[] loadIV() {
+        if (!file.exists()) {
+            logger.warn("Server key file does not exist.");
+            return null;
+        }
+
+        try {
+            Map<String, String> keysMap = mapper.readValue(file, Map.class);
+            String encodedIV = keysMap.get("iv");
+
+            if (encodedIV == null) {
+                logger.warn("No IV found in file.");
+                return null;
+            }
+
+            return Base64.getDecoder().decode(encodedIV);
+        } catch (IOException ex) {
+            logger.error("Error loading IV: {}", ex.getMessage(), ex);
+        }
+
+        return null;
+    }
+
 }

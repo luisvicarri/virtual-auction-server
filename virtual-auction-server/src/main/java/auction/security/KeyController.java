@@ -2,6 +2,7 @@ package auction.security;
 
 import java.security.KeyPair;
 import java.security.PublicKey;
+import javax.crypto.SecretKey;
 
 public class KeyController {
 
@@ -11,17 +12,37 @@ public class KeyController {
         this.service = service;
     }
     
-    public void generateKeyPair() {
-        if (service.loadKeys() == null) {
-            service.generateKeyPair();
+    public void generateAsymmetricKeys() {
+        if (service.loadAsymmetricKeys() == null) {
+            service.generateAsymmetricKeys();
         }
     }
     
-    public KeyPair loadKeys() {
-        return service.loadKeys();
+    public KeyPair loadAsymmetricKeys() {
+        return service.loadAsymmetricKeys();
     }
     
     public PublicKey getPublicKey(String encodedPublicKey) {
         return service.getPublicKey(encodedPublicKey);
+    }
+    
+    public void generateSymmetricKey() {
+        if (service.loadSymmetricKey() == null) {
+            service.generateSymmetricKey();
+        }
+    }
+    
+    public SecretKey loadSymmetricKey() {
+        return service.loadSymmetricKey();
+    }
+    
+    public void generateIV() {
+        if (service.loadIV() == null) {
+            service.generateIV();
+        }
+    }
+    
+    public byte[] loadIV() {
+        return service.loadIV();
     }
 }
