@@ -1,6 +1,7 @@
 package auction.stubs;
 
 import auction.main.ServerAuctionApp;
+import auction.models.User;
 import auction.models.dtos.Request;
 import auction.models.dtos.Response;
 import auction.security.SecurityMiddleware;
@@ -15,6 +16,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
+import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
@@ -37,7 +39,7 @@ public class UserServiceStub {
     }
 
     public void startListening() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try ( ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Server started on port {}", port);
 
             while (true) {
@@ -53,8 +55,17 @@ public class UserServiceStub {
                     // Assinar a resposta
                     String responseSignature = signResponse(responseJson);
 
-                    logger.info("Sending response: {}", responseJson);
-                    out.println(responseJson);
+                    Request request = mapper.readValue(requestJson, Request.class);
+                    Map<String, Object> data = request.getData().orElseThrow(() -> new IllegalArgumentException("Missing data"));
+                    UUID userId = data.containsKey("user_id") ? UUID.fromString(data.get("user_id").toString()) : null;
+
+                    String encryptedResponse = securityMiddleware.encryptMessage(
+                            responseJson,
+                            getEncodedUserPublicKey(userId)
+                    );
+
+                    logger.info("Sending response: {}", encryptedResponse);
+                    out.println(encryptedResponse);
                     if (signature != null) {
                         out.println(responseSignature);
                     } else {
@@ -164,6 +175,7 @@ public class UserServiceStub {
                     .getSymmetricKey()
                     .getEncoded();
             response.addData("symmetricKey", encodedSymmetricKey);
+
             return mapper.writeValueAsString(response);
         }
 
@@ -195,5 +207,13 @@ public class UserServiceStub {
                         .getPublic()
                         .getEncoded()
         );
+    }
+
+    private PublicKey getEncodedUserPublicKey(UUID userId) {
+        return ServerAuctionApp.frame.getAppController()
+                .getUserController()
+                .findById(userId)
+                .map(User::getPublicKey)
+                .orElseThrow(() -> new IllegalStateException("User not found or does not have a public key"));
     }
 }

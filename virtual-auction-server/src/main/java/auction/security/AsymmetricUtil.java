@@ -39,6 +39,7 @@ public class AsymmetricUtil {
 
     public String encrypt(String plainText, PublicKey publicKey) {
         try {
+            logger.info("Plain Text: {}", plainText);
             logger.info("Encrypting data using RSA...");
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -58,6 +59,7 @@ public class AsymmetricUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             String decryptedData = new String(cipher.doFinal(Base64.getDecoder().decode(cipherText)));
             logger.info("Decryption successful.");
+            logger.info("Decrypted message: {}", decryptedData);
             return decryptedData;
         } catch (InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
             logger.error("RSA decryption failed", e);
