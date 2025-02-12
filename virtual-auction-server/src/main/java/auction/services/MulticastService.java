@@ -205,18 +205,31 @@ public class MulticastService {
      */
     private NetworkInterface getNetworkInterface() {
         try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface netIf = interfaces.nextElement();
-                if (!netIf.isLoopback() && netIf.isUp()) {
-                    logger.info("Network interface found: {}", netIf.getDisplayName());
-                    return netIf;
-                }
+        // Tenta obter a interface configurada manualmente
+        String networkInterfaceName = ConfigManager.get("NETWORK_INTERFACE");
+        if (networkInterfaceName != null && !networkInterfaceName.isEmpty()) {
+            NetworkInterface netIf = NetworkInterface.getByName(networkInterfaceName);
+            if (netIf != null && netIf.isUp()) {
+                logger.info("Using configured network interface: {}", netIf.getDisplayName());
+                return netIf;
+            } else {
+                logger.warn("Configured network interface '{}' not found or not active.", networkInterfaceName);
             }
-        } catch (SocketException e) {
-            logger.error("Error searching for network interfaces.", e);
         }
-        return null;
+
+        // Se não houver configuração manual, usa a primeira interface válida
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface netIf = interfaces.nextElement();
+            if (!netIf.isLoopback() && netIf.isUp()) {
+                logger.info("Auto-detected network interface: {}", netIf.getDisplayName());
+                return netIf;
+            }
+        }
+    } catch (SocketException e) {
+        logger.error("Error searching for network interfaces.", e);
+    }
+    return null;
     }
 
     public void onTimeUpdate(Duration timeLeft) {
