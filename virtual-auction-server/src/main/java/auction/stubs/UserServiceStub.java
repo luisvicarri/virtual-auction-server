@@ -56,16 +56,23 @@ public class UserServiceStub {
                     String responseSignature = signResponse(responseJson);
 
                     Request request = mapper.readValue(requestJson, Request.class);
-                    Map<String, Object> data = request.getData().orElseThrow(() -> new IllegalArgumentException("Missing data"));
-                    UUID userId = data.containsKey("user_id") ? UUID.fromString(data.get("user_id").toString()) : null;
+                    boolean isSignIn = "SIGN-IN".equals(request.getStatus());
+                    
+                    Response response = mapper.readValue(responseJson, Response.class);
+                    boolean successful = "SUCCESS".equals((response.getStatus()));
 
-                    String encryptedResponse = securityMiddleware.encryptMessage(
-                            responseJson,
-                            getEncodedUserPublicKey(userId)
-                    );
+                    if (isSignIn && successful) {
+                        Map<String, Object> data = request.getData().orElseThrow(() -> new IllegalArgumentException("Missing data"));
+                        UUID userId = data.containsKey("user_id") ? UUID.fromString(data.get("user_id").toString()) : null;
 
-                    logger.info("Sending response: {}", encryptedResponse);
-                    out.println(encryptedResponse);
+                        responseJson = securityMiddleware.encryptMessage(
+                                responseJson,
+                                getEncodedUserPublicKey(userId)
+                        );
+                    }
+
+                    logger.info("Sending response: {}", responseJson);
+                    out.println(responseJson);
                     if (signature != null) {
                         out.println(responseSignature);
                     } else {
@@ -175,6 +182,11 @@ public class UserServiceStub {
                     .getSymmetricKey()
                     .getEncoded();
             response.addData("symmetricKey", encodedSymmetricKey);
+            byte[] encodedIv = ServerAuctionApp.frame.getAppController()
+                    .getServerController()
+                    .getIv() // Chamada do método do ServerController
+                    .getIV(); // Chamada da biblioteca para retornar como um byte[]
+            response.addData("iv", encodedIv);
 
             return mapper.writeValueAsString(response);
         }

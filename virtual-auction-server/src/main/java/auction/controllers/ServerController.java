@@ -38,7 +38,7 @@ public class ServerController {
         this.symmetricKey = existingSymmetricKey;
         
         // Carrega ou gera IV
-        byte[] existingIV = keyController.loadIV();
+        IvParameterSpec existingIV = keyController.loadIV();
         if (existingIV == null) {
             logger.warn("No existing IV found. Generating new IV...");
             keyController.generateIV();
@@ -46,7 +46,7 @@ public class ServerController {
         } else {
             logger.info("Existing IV loaded successfully.");
         }
-        this.iv = new IvParameterSpec(existingIV);
+        this.iv = existingIV;
     }
 
     public KeyPair getKeyPair() {

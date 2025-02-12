@@ -16,6 +16,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,26 +168,20 @@ public class KeyRepository {
         }
     }
 
-    public byte[] loadIV() {
+    public IvParameterSpec loadIV() {
         if (!file.exists()) {
-            logger.warn("Server key file does not exist.");
+            logger.warn("Server IV's file does not exist.");
             return null;
         }
-
         try {
-            Map<String, String> keysMap = mapper.readValue(file, Map.class);
-            String encodedIV = keysMap.get("iv");
-
-            if (encodedIV == null) {
-                logger.warn("No IV found in file.");
-                return null;
-            }
-
-            return Base64.getDecoder().decode(encodedIV);
+            Map<String, String> keyMap = mapper.readValue(file, Map.class);
+            String encodedIVBase64 = keyMap.get("iv");
+            if (encodedIVBase64 == null || encodedIVBase64.isEmpty()) return null;
+            byte[] decodedIV = Base64.getDecoder().decode(encodedIVBase64);
+            return new IvParameterSpec(decodedIV);
         } catch (IOException ex) {
             logger.error("Error loading IV: {}", ex.getMessage(), ex);
         }
-
         return null;
     }
 

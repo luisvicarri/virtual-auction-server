@@ -57,7 +57,7 @@ public class KeyService {
         return repository.loadSymmetricKey();
     }
     
-    public byte[] loadIV() {
+    public IvParameterSpec loadIV() {
         return repository.loadIV();
     }
     

@@ -2,6 +2,7 @@ package auction.services;
 
 import auction.main.ServerAuctionApp;
 import auction.models.dtos.Response;
+import auction.security.SymmetricUtil;
 import auction.utils.ConfigManager;
 import auction.utils.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +20,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +37,33 @@ public class MulticastService {
     private InetAddress group;
     private NetworkInterface networkInterface;
 
+    private final SymmetricUtil symmetricUtil;
+    private SecretKey symmetricKey;
+    private IvParameterSpec iv;
+
     public MulticastService() {
         this.MULTICAST_ADDRESS = ConfigManager.get("MULTICAST_ADDRESS");
         this.PORT = Integer.parseInt(ConfigManager.get("MULTICAST_PORT"));
         this.mapper = JsonUtil.getObjectMapper();
+        this.symmetricUtil = new SymmetricUtil();
+    }
+
+    private SecretKey getSymmetricKey() {
+        if (symmetricKey == null) {
+            symmetricKey = ServerAuctionApp.frame.getAppController()
+                    .getKeyController()
+                    .loadSymmetricKey();
+        }
+        return symmetricKey;
+    }
+
+    private IvParameterSpec getIV() {
+        if (iv == null) {
+            iv = ServerAuctionApp.frame.getAppController()
+                    .getKeyController()
+                    .loadIV();
+        }
+        return iv;
     }
 
     /**
@@ -86,9 +112,12 @@ public class MulticastService {
      */
     public void send(String msg) {
         try {
-            logger.info("Sending message: {}", msg);
-            byte[] data = msg.getBytes();
-            sendData(data);
+            String encryptedMsg = symmetricUtil.encrypt(
+                    msg,
+                    getSymmetricKey(),
+                    getIV()
+            );
+            sendData(encryptedMsg.getBytes());
         } catch (Exception e) {
             logger.error("Error sending message.", e);
         }
@@ -100,8 +129,12 @@ public class MulticastService {
     public void send(Object obj) {
         try {
             String json = mapper.writeValueAsString(obj);
-            logger.info("Sending serialized object as JSON with size {}: {}", json.length(), json);
-            sendData(json.getBytes());
+            String encryptedMsg = symmetricUtil.encrypt(
+                    json,
+                    getSymmetricKey(),
+                    getIV()
+            );
+            sendData(encryptedMsg.getBytes());
         } catch (IOException e) {
             logger.error("Error converting object to JSON.", e);
         }
@@ -112,10 +145,13 @@ public class MulticastService {
      */
     public String receiveString() {
         try {
-            logger.info("Waiting for multicast message...");
-            String data = receiveData();
-            logger.info("Message received: {}", data);
-            return data;
+            String encryptedData = receiveData();
+            String decryptedData = symmetricUtil.decrypt(
+                    encryptedData,
+                    getSymmetricKey(),
+                    getIV()
+            );
+            return decryptedData;
         } catch (IOException e) {
             logger.error("Error receiving message.", e);
         }
@@ -127,10 +163,14 @@ public class MulticastService {
      */
     public <T> T receiveObject(Class<T> type) {
         try {
-            String receivedJson = receiveData();
-            if (receivedJson != null) {
-                logger.info("Received JSON message: {}", receivedJson);
-                return mapper.readValue(receivedJson, type);
+            String encryptedJson = receiveData();
+            if (encryptedJson != null) {
+                String decryptedJson = symmetricUtil.decrypt(
+                        encryptedJson,
+                        getSymmetricKey(),
+                        getIV()
+                );
+                return mapper.readValue(decryptedJson, type);
             }
         } catch (IOException e) {
             logger.error("Error deserializing JSON.", e);
@@ -193,7 +233,7 @@ public class MulticastService {
             logger.error("Error serializing time message.");
         }
     }
-    
+
     public void startListening(Consumer<String> onMessageReceived) {
         new Thread(() -> {
             try {

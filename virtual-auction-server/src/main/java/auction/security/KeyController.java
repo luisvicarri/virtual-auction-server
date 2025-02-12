@@ -3,6 +3,7 @@ package auction.security;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 public class KeyController {
 
@@ -42,7 +43,7 @@ public class KeyController {
         }
     }
     
-    public byte[] loadIV() {
+    public IvParameterSpec loadIV() {
         return service.loadIV();
     }
 }
