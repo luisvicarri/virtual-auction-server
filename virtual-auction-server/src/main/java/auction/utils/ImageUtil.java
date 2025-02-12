@@ -1,6 +1,7 @@
 package auction.utils;
 
 import java.awt.Image;
+import java.io.File;
 import javax.swing.ImageIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public class ImageUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
-    
+
     public ImageIcon resizeIcon(ImageIcon icon, int maxWidth, int maxHeight) {
         Image img = icon.getImage();
         int originalWidth = icon.getIconWidth();
@@ -42,6 +43,20 @@ public class ImageUtil {
             return new ImageIcon(imgURL);
         } else {
             System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }
+
+    public ImageIcon createImageIconAbsolute(String path) {
+        if (path == null || path.isEmpty()) {
+            logger.error("Erro: Caminho da imagem é nulo ou vazio.");
+            return null;
+        }
+        File file = new File(path);
+        if (file.exists()) {
+            return new ImageIcon(file.getAbsolutePath());
+        } else {
+            logger.error("Arquivo não encontrado: " + path);
             return null;
         }
     }

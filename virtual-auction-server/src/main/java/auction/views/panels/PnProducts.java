@@ -69,60 +69,10 @@ public class PnProducts extends javax.swing.JPanel {
         lbAdd.setIcon(resizedIcon);
     }
 
-    private Item createItem(String title, String description, double reservePrice, Duration duration, String image) {
-        ItemData data = new ItemData(
-                title,
-                description,
-                (reservePrice * 0.5), // Calcula o lance inicial como 10% do preço de reserva
-                reservePrice,
-                duration,
-                image
-        );
-
-        return new Item(
-                data,
-                0.0, // Lance inicial como 0
-                null, // Foto ou outro dado inicial como nulo
-                Optional.empty(), // Outros valores opcionais
-                Optional.empty(),
-                Optional.empty()
-        );
-    }
-
     private void initializeProducts() {
         ItemController controller = ServerAuctionApp.frame.getAppController().getItemController();
-
-        // Carrega os produtos do repositório (se não houver, adiciona os padrões)
-        List<Item> items = loadItemsFromRepository(controller);
-
-        // Exibe os produtos na interface
+        List<Item> items = controller.getItemsList();
         addProductTemplates(items);
-    }
-
-    private List<Item> loadItemsFromRepository(ItemController controller) {
-        Map<UUID, Item> itemsMap = controller.getItems();
-
-        // Se já houver produtos no repositório, retorna a lista
-        if (!itemsMap.isEmpty()) {
-            logger.info("Produtos existentes no repositório");
-            return new ArrayList<>(itemsMap.values());
-        }
-
-        // Se o repositório estiver vazio, carrega os produtos padrões
-        List<Item> products = new ArrayList<>();
-
-        products.add(createItem("Tênis Nike Air Max", "Tênis esportivo de alta performance da Nike", 100, Duration.ofSeconds(20), "/views/products/imProduct01.png"));
-        products.add(createItem("Xbox Series S", "Console de videogame Xbox Series S com armazenamento de 512GB", 800, Duration.ofHours(1), "/views/products/imProduct02.png"));
-        products.add(createItem("Apple Watch Series 10", "Relógio inteligente da Apple com monitoramento de saúde avançado", 1200, Duration.ofHours(2), "/views/products/imProduct03.png"));
-        products.add(createItem("iPhone 15", "Smartphone Apple com design moderno e câmera aprimorada", 900, Duration.ofMinutes(30), "/views/products/imProduct04.png"));
-        products.add(createItem("Rolex", "Relógio de luxo da marca Rolex", 1300, Duration.ofMinutes(30), "/views/products/imProduct05.png"));
-
-        // Adiciona os produtos padrões ao repositório
-        for (Item item : products) {
-            controller.addItem(item);
-        }
-
-        return products;
     }
 
     private void addProductTemplates(List<Item> items) {
@@ -159,6 +109,9 @@ public class PnProducts extends javax.swing.JPanel {
             template.getLbDuration().setText(hours + "hrs : " + minutes + "mins : " + seconds + "secs");
 
             ImageIcon originalIcon = imageUtil.createImageIcon(item.getData().getItemImage());
+            if (originalIcon == null) {
+                originalIcon = imageUtil.createImageIconAbsolute(item.getData().getItemImage());
+            }
             ImageIcon resizedIcon = imageUtil.resizeIcon(originalIcon, 263, 250);
             template.getLbPhoto().setIcon(resizedIcon);
 
@@ -386,7 +339,8 @@ public class PnProducts extends javax.swing.JPanel {
     }//GEN-LAST:event_lbOptionsMouseClicked
 
     private void lbAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAddMouseClicked
-        // TODO add your handling code here:
+        Frame.pnAddItem = new PnAddItem();
+        ServerAuctionApp.frame.initNewPanel(Frame.pnAddItem);
     }//GEN-LAST:event_lbAddMouseClicked
 
     private void lbProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbProductsMouseClicked

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ public class ItemRepository {
     private final File file = new File("repositories/items/items.json");
     private Map<UUID, Item> items = new HashMap<>();
     private final ObjectMapper mapper = JsonUtil.getObjectMapper();
+    private List<Item> itemsList = new ArrayList<>();
 
     public ItemRepository() {
         loadItems();
@@ -31,6 +34,10 @@ public class ItemRepository {
         this.items = items;
     }
 
+    public List<Item> getItemsList() {
+        return itemsList;
+    }
+    
     public boolean addItem(Item newItem) {
         if (items.containsKey(newItem.getId())) {
             logger.warn("Attempt to add item with existing UUID: {}", newItem.getId());
@@ -38,6 +45,7 @@ public class ItemRepository {
         }
 
         items.put(newItem.getId(), newItem);
+        itemsList.add(newItem);
         logger.info("Item successfully added: {}", newItem.getData().getTitle());
 
         try {
@@ -92,16 +100,15 @@ public class ItemRepository {
             return false;
         }
     }
-    
+
     private void loadItems() {
         if (file.exists()) {
             try {
-                items = mapper.readValue(file, new TypeReference<Map<UUID, Item>>() {
-                });
+                items = mapper.readValue(file, new TypeReference<Map<UUID, Item>>() {});
+                itemsList = new ArrayList<>(items.values());
             } catch (IOException ex) {
                 logger.error("Error loading items", ex);
             }
         }
     }
-
 }

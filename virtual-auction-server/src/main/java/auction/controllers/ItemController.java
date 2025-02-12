@@ -2,6 +2,7 @@ package auction.controllers;
 
 import auction.models.Item;
 import auction.services.ItemService;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,5 +28,9 @@ public class ItemController {
     
     public boolean updateItem(Item updatedItem) {
         return service.updateItem(updatedItem);
+    }
+    
+    public List<Item> getItemsList() {
+        return service.getItemsList();
     }
 }

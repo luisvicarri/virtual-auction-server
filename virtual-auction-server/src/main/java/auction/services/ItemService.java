@@ -2,6 +2,7 @@ package auction.services;
 
 import auction.models.Item;
 import auction.repositories.ItemRepository;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -51,4 +52,7 @@ public class ItemService {
                 .orElse(null);
     }
 
+    public List<Item> getItemsList() {
+        return repository.getItemsList();
+    }
 }

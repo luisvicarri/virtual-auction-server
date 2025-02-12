@@ -2,6 +2,7 @@ package auction.views.frames;
 
 import auction.controllers.AppController;
 import auction.models.Auction;
+import auction.views.panels.PnAddItem;
 import auction.views.panels.PnAuction;
 import auction.views.panels.PnProducts;
 import java.awt.BorderLayout;
@@ -17,6 +18,7 @@ public class Frame extends javax.swing.JFrame {
     
     public static PnProducts pnProducts;
     public static PnAuction pnAuction;
+    public static PnAddItem pnAddItem;
 
     public Frame(AppController appController) {
         initComponents();
