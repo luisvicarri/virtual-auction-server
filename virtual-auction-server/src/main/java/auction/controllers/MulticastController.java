@@ -36,12 +36,8 @@ public class MulticastController implements TimeListener {
         service.send(obj);
     }
     
-    public String receiveString() {
-        return service.receiveString();
-    }
-    
-    public <T> T receiveObject(Class<T> type) {
-        return service.receiveObject(type);
+    public String receive() {
+        return service.receive();
     }
 
     @Override

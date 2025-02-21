@@ -11,12 +11,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.time.Duration;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -35,7 +31,6 @@ public class MulticastService {
 
     private MulticastSocket socket;
     private InetAddress group;
-    private NetworkInterface networkInterface;
 
     private final SymmetricUtil symmetricUtil;
     private SecretKey symmetricKey;
@@ -74,15 +69,8 @@ public class MulticastService {
             logger.info("Trying to connect to multicast group at {}:{}", MULTICAST_ADDRESS, PORT);
 
             this.group = InetAddress.getByName(MULTICAST_ADDRESS);
-            this.networkInterface = getNetworkInterface();
-
-            if (networkInterface == null) {
-                throw new IOException("Could not find a valid network interface.");
-            }
-
             this.socket = new MulticastSocket(PORT);
-            this.socket.setNetworkInterface(networkInterface);
-            this.socket.joinGroup(new InetSocketAddress(group, PORT), networkInterface);
+            this.socket.joinGroup(group);
 
             logger.info("Connection to multicast group {}:{} succeeded.", MULTICAST_ADDRESS, PORT);
         } catch (IOException e) {
@@ -98,7 +86,7 @@ public class MulticastService {
         if (socket != null) {
             try {
                 logger.info("Leaving multicast group {}:{}.", MULTICAST_ADDRESS, PORT);
-                socket.leaveGroup(new InetSocketAddress(group, PORT), networkInterface);
+                socket.leaveGroup(group);
                 socket.close();
                 logger.info("Successfully disconnected from multicast group.");
             } catch (IOException e) {
@@ -143,7 +131,7 @@ public class MulticastService {
     /**
      * Recebe uma mensagem do grupo multicast como string.
      */
-    public String receiveString() {
+    public String receive() {
         try {
             String encryptedData = receiveData();
             String decryptedData = symmetricUtil.decrypt(
@@ -159,30 +147,10 @@ public class MulticastService {
     }
 
     /**
-     * Recebe um objeto do grupo multicast, desserializando-o de JSON.
-     */
-    public <T> T receiveObject(Class<T> type) {
-        try {
-            String encryptedJson = receiveData();
-            if (encryptedJson != null) {
-                String decryptedJson = symmetricUtil.decrypt(
-                        encryptedJson,
-                        getSymmetricKey(),
-                        getIV()
-                );
-                return mapper.readValue(decryptedJson, type);
-            }
-        } catch (IOException e) {
-            logger.error("Error deserializing JSON.", e);
-        }
-        return null;
-    }
-
-    /**
      * Envia dados brutos (byte array) para o grupo multicast.
      */
     private void sendData(byte[] data) {
-        try ( DatagramSocket sendSocket = new DatagramSocket()) {
+        try (DatagramSocket sendSocket = new DatagramSocket()) {
             DatagramPacket packet = new DatagramPacket(data, data.length, group, PORT);
             sendSocket.send(packet);
         } catch (IOException e) {
@@ -198,38 +166,6 @@ public class MulticastService {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         socket.receive(packet);
         return new String(packet.getData(), 0, packet.getLength());
-    }
-
-    /**
-     * Obtém a primeira interface de rede válida disponível.
-     */
-    private NetworkInterface getNetworkInterface() {
-        try {
-        // Tenta obter a interface configurada manualmente
-        String networkInterfaceName = ConfigManager.get("NETWORK_INTERFACE");
-        if (networkInterfaceName != null && !networkInterfaceName.isEmpty()) {
-            NetworkInterface netIf = NetworkInterface.getByName(networkInterfaceName);
-            if (netIf != null && netIf.isUp()) {
-                logger.info("Using configured network interface: {}", netIf.getDisplayName());
-                return netIf;
-            } else {
-                logger.warn("Configured network interface '{}' not found or not active.", networkInterfaceName);
-            }
-        }
-
-        // Se não houver configuração manual, usa a primeira interface válida
-        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-        while (interfaces.hasMoreElements()) {
-            NetworkInterface netIf = interfaces.nextElement();
-            if (!netIf.isLoopback() && netIf.isUp()) {
-                logger.info("Auto-detected network interface: {}", netIf.getDisplayName());
-                return netIf;
-            }
-        }
-    } catch (SocketException e) {
-        logger.error("Error searching for network interfaces.", e);
-    }
-    return null;
     }
 
     public void onTimeUpdate(Duration timeLeft) {
@@ -251,7 +187,7 @@ public class MulticastService {
         new Thread(() -> {
             try {
                 while (true) {
-                    String message = receiveString();
+                    String message = receive();
                     if (message != null) {
                         ServerAuctionApp.frame.getAppController().getMulticastController().getDispatcher().addMessage(message); // Encaminha para o dispatcher
                     }

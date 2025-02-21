@@ -60,7 +60,7 @@ public class Seeding {
         new Thread(() -> {
             appController.getMulticastController().connect();
             while (true) {
-                String message = appController.getMulticastController().receiveString();
+                String message = appController.getMulticastController().receive();
                 if (message != null) {
                     // Adiciona a mensagem ao dispatcher
                     appController.getMulticastController().getDispatcher().addMessage(message);

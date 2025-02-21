@@ -44,7 +44,9 @@ public class UserServiceStub {
             logger.info("Server started on port {}", port);
 
             while (true) {
-                try ( Socket clientSocket = serverSocket.accept();  BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));  PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+                try (Socket clientSocket = serverSocket.accept();
+                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
                     logger.info("Connection established with client: {}", clientSocket.getRemoteSocketAddress());
 
                     String requestJson = in.readLine();
