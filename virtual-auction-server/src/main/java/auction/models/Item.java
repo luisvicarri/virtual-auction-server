@@ -89,5 +89,4 @@ public class Item {
     public void setWinningBidder(Optional<UUID> winningBidder) {
         this.winningBidder = winningBidder;
     }
-
 }

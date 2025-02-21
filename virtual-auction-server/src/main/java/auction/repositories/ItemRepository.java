@@ -72,10 +72,6 @@ public class ItemRepository {
         }
     }
 
-    /**
-     * Atualiza um item já existente e salva as alterações no arquivo. Retorna
-     * true se a atualização for bem-sucedida.
-     */
     public boolean updateItem(Item updatedItem) {
         if (updatedItem == null || updatedItem.getId() == null) {
             logger.warn("Invalid item provided for update.");

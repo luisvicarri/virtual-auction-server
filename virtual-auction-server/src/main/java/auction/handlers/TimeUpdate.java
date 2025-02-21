@@ -19,5 +19,4 @@ public class TimeUpdate implements MessageHandler {
         logger.info("Processing time update message: {}", message);
         service.updateTime(message);
     }
-
 }

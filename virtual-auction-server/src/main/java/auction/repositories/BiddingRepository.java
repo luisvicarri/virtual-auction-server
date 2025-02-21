@@ -25,16 +25,10 @@ public class BiddingRepository {
         return bidsByItem;
     }
 
-    /**
-     * Retorna os lances de um item específico.
-     */
     public synchronized List<Bid> getBidsForItem(UUID itemId) {
         return bidsByItem.getOrDefault(itemId, new ArrayList<>());
     }
 
-    /**
-     * Adiciona um lance para um item e salva no arquivo JSON.
-     */
     public synchronized boolean addBid(UUID itemId, Bid bid) {
         List<Bid> bids = bidsByItem.computeIfAbsent(itemId, k -> new ArrayList<>());
         bids.add(bid);
@@ -50,9 +44,6 @@ public class BiddingRepository {
         }
     }
 
-    /**
-     * Salva os lances no arquivo JSON.
-     */
     private void saveBids() {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(file, bidsByItem);
@@ -75,5 +66,4 @@ public class BiddingRepository {
             logger.error("Error cleaning bid file.", ex);
         }
     }
-
 }

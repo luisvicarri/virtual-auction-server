@@ -16,11 +16,9 @@ public class FontUtil {
                 throw new IOException("Arquivo de fonte não encontrado: " + fontPath);
             }
 
-            // Carrega a fonte a partir do InputStream
             Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream);
             font = font.deriveFont(size);
 
-            // Registra a fonte no sistema gráfico
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(font);
 
@@ -37,7 +35,6 @@ public class FontUtil {
                 JComponent component = entry.getKey();
                 Float size = entry.getValue();
 
-                // Carrega a fonte e aplica ao componente
                 Font font = loadFont(fontPath, size);
                 if (font != null) {
                     component.setFont(font);
@@ -46,6 +43,5 @@ public class FontUtil {
         } catch (Exception e) {
             System.err.println("Erro ao aplicar fontes nos componentes: " + e.getMessage());
         }
-    }
-    
+    }    
 }

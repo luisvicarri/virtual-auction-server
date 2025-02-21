@@ -29,27 +29,19 @@ public class KeyRepository {
     public KeyRepository() {
     }
 
-    /**
-     * Saves the server keys to a JSON file if necessary.
-     *
-     * @param keyPair The server key pair.
-     */
     public void saveAsymmetricKeys(KeyPair keyPair) {
         try {
-            // Converting the keys to Base64
             String encodedPrivateKey = Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
             String encodedPublicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-            // If the file already exists, check if the keys are already saved
             if (file.exists()) {
                 Map<String, String> existingKeys = mapper.readValue(file, Map.class);
                 if (encodedPrivateKey.equals(existingKeys.get("privateKey"))
                         && encodedPublicKey.equals(existingKeys.get("publicKey"))) {
                     logger.info("Server keys are already saved. No action required.");
-                    return; // Avoid unnecessary rewriting
+                    return;
                 }
             }
 
-            // Creating and saving JSON with keys
             Map<String, String> keysMap = Map.of(
                     "privateKey", encodedPrivateKey,
                     "publicKey", encodedPublicKey
@@ -63,11 +55,6 @@ public class KeyRepository {
         }
     }
 
-    /**
-     * Loads server keys from the JSON file, if available.
-     *
-     * @return The server key pair or {@code null} if there is an error.
-     */
     public KeyPair loadAsymmetricKeys() {
         if (!file.exists()) {
             logger.warn("Server key file does not exist.");
@@ -85,7 +72,6 @@ public class KeyRepository {
                 return null;
             }
 
-            // Decoding the keys
             byte[] privateKeyBytes = Base64.getDecoder().decode(encodedPrivateKey);
             byte[] publicKeyBytes = Base64.getDecoder().decode(encodedPublicKey);
 
@@ -184,5 +170,4 @@ public class KeyRepository {
         }
         return null;
     }
-
 }

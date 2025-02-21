@@ -61,9 +61,6 @@ public class MulticastService {
         return iv;
     }
 
-    /**
-     * Conecta-se ao grupo multicast.
-     */
     public void connect() {
         try {
             logger.info("Trying to connect to multicast group at {}:{}", MULTICAST_ADDRESS, PORT);
@@ -75,13 +72,10 @@ public class MulticastService {
             logger.info("Connection to multicast group {}:{} succeeded.", MULTICAST_ADDRESS, PORT);
         } catch (IOException e) {
             logger.error("Error connecting to multicast group.", e);
-            throw new RuntimeException(e); // Propaga o erro para que o chamador saiba que não foi possível conectar
+            throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Desconecta-se do grupo multicast.
-     */
     public void disconnect() {
         if (socket != null) {
             try {
@@ -95,9 +89,6 @@ public class MulticastService {
         }
     }
 
-    /**
-     * Envia uma mensagem como string para o grupo multicast.
-     */
     public void send(String msg) {
         try {
             String encryptedMsg = symmetricUtil.encrypt(
@@ -111,9 +102,6 @@ public class MulticastService {
         }
     }
 
-    /**
-     * Envia um objeto para o grupo multicast, serializando-o como JSON.
-     */
     public void send(Object obj) {
         try {
             String json = mapper.writeValueAsString(obj);
@@ -128,9 +116,6 @@ public class MulticastService {
         }
     }
 
-    /**
-     * Recebe uma mensagem do grupo multicast como string.
-     */
     public String receive() {
         try {
             String encryptedData = receiveData();
@@ -146,9 +131,6 @@ public class MulticastService {
         return null;
     }
 
-    /**
-     * Envia dados brutos (byte array) para o grupo multicast.
-     */
     private void sendData(byte[] data) {
         try (DatagramSocket sendSocket = new DatagramSocket()) {
             DatagramPacket packet = new DatagramPacket(data, data.length, group, PORT);
@@ -158,9 +140,6 @@ public class MulticastService {
         }
     }
 
-    /**
-     * Recebe dados brutos (byte array) do grupo multicast.
-     */
     private String receiveData() throws IOException {
         byte[] buffer = new byte[4096];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);

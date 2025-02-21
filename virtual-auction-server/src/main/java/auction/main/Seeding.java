@@ -46,7 +46,6 @@ public class Seeding {
     }
     
     public void start() {
-        
         insertItems();
 
         new Thread(() -> {

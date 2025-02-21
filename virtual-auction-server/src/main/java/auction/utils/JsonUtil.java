@@ -29,5 +29,4 @@ public class JsonUtil {
             logger.error("Error converting json to object", ex);
         }
     }
-    
 }

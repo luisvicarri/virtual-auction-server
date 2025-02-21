@@ -19,5 +19,4 @@ public class ClientConnected implements MessageHandler {
         logger.info("Processing client connected message: {}", message);
         service.clientConnected(message);
     }
-    
 }

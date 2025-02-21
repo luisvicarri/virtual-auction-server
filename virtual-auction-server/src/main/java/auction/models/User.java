@@ -56,5 +56,4 @@ public class User {
     public String getEncodedPublicKey() {
         return encodedPublicKey;
     }
-    
 }

@@ -70,5 +70,4 @@ public class ItemData {
     public void setItemImage(String itemImage) {
         this.itemImage = itemImage;
     }
-
 }

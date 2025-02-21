@@ -19,5 +19,4 @@ public class BidUpdated implements MessageHandler {
         logger.info("Processing bid updated message: {}", message);
         service.displayNewBid(message);
     }
-    
 }

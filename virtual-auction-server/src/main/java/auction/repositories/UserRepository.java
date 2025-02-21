@@ -46,10 +46,6 @@ public class UserRepository {
                 .findFirst();
     }
 
-    /**
-     * (pt-BR) Adiciona um usuário ao repositório e salva no arquivo (en-US) Add
-     * a user to the repository and save to file
-     */
     public UUID addUser(User newUser) {
         if (users.containsKey(newUser.getId())) {
             logger.warn("Attempt to add user with existing UUID: {}", newUser.getId());
@@ -73,9 +69,6 @@ public class UserRepository {
         }
     }
 
-    /**
-     * (pt-BR) Salva os usuários no arquivo JSON (en-US) Save users to JSON file
-     */
     private void saveUsers() {
         try {
             if (users.containsKey(null)) {
@@ -88,10 +81,6 @@ public class UserRepository {
         }
     }
 
-    /**
-     * (pt-BR) Carrega os usuários do arquivo JSON para a memória. (en-US) Loads
-     * users from the JSON file into memory.
-     */
     private void loadUsers() {
         if (file.exists()) {
             try {

@@ -19,5 +19,4 @@ public class PlaceBid implements MessageHandler {
         logger.info("Processing place bid message: {}", message);
         service.processBid(message);
     }
-    
 }

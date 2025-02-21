@@ -20,18 +20,15 @@ public class ConfigManager {
         }
     }
 
-    // Método para obter uma configuração pelo nome da chave
     public static String get(String key) {
         return config.getProperty(key);
     }
 
-    // Método para definir uma configuração e salvar no arquivo
     public static void set(String key, String value) {
         config.setProperty(key, value);
         saveProperties();
     }
 
-    // Método para salvar as propriedades de volta no arquivo
     private static void saveProperties() {
         try (OutputStream output = new FileOutputStream(CONFIG_FILE)) {
             config.store(output, "Arquivo de Configurações");
@@ -39,5 +36,4 @@ public class ConfigManager {
             System.err.println("Erro ao salvar configurações: " + e.getMessage());
         }
     }
-
 }

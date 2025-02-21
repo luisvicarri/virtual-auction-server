@@ -187,7 +187,6 @@ public class PnAddItem extends javax.swing.JPanel {
             double reservePrice = Double.parseDouble(reservePriceStr);
             Duration duration = parseDuration(durationStr);
 
-            // Criando o item corretamente com sua função `createItem`
             Item newItem = createItem(
                     tfTitle.getText(),
                     tfDescription.getText(),

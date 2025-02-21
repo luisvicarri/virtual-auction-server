@@ -14,5 +14,4 @@ public class ServerAuctionApp {
         frame = new Frame(appController);
         frame.start();
     }
-
 }

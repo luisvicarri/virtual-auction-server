@@ -60,5 +60,4 @@ public class ServerController {
     public IvParameterSpec getIv() {
         return iv;
     }
-
 }

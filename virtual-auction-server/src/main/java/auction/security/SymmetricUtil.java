@@ -22,11 +22,6 @@ public class SymmetricUtil {
 
     public SymmetricUtil() {}
 
-    /**
-     * Gera uma chave AES de 256 bits.
-     * 
-     * @return Chave AES gerada.
-     */
     public SecretKey generateAESKey() {
         try {
             logger.info("Generating AES key...");
@@ -41,25 +36,12 @@ public class SymmetricUtil {
         }
     }
 
-    /**
-     * Gera um vetor de inicialização (IV) de 16 bytes.
-     * 
-     * @return Vetor de Inicialização (IV).
-     */
     public IvParameterSpec generateIV() {
         byte[] iv = new byte[16];
         new SecureRandom().nextBytes(iv);
         return new IvParameterSpec(iv);
     }
 
-    /**
-     * Criptografa um texto utilizando AES/CBC/PKCS5Padding.
-     * 
-     * @param plainText Texto a ser criptografado.
-     * @param secretKey Chave AES utilizada na criptografia.
-     * @param iv Vetor de inicialização (IV).
-     * @return Texto criptografado em Base64.
-     */
     public String encrypt(String plainText, SecretKey secretKey, IvParameterSpec iv) {
         try {
             logger.info("Encrypting data using AES...");
@@ -75,14 +57,6 @@ public class SymmetricUtil {
         }
     }
 
-    /**
-     * Descriptografa um texto criptografado usando AES/CBC/PKCS5Padding.
-     * 
-     * @param cipherText Texto criptografado em Base64.
-     * @param secretKey Chave AES utilizada na criptografia.
-     * @param iv Vetor de inicialização (IV) utilizado na criptografia.
-     * @return Texto descriptografado.
-     */
     public String decrypt(String cipherText, SecretKey secretKey, IvParameterSpec iv) {
         try {
             logger.info("Decrypting data using AES...");
@@ -97,43 +71,19 @@ public class SymmetricUtil {
         }
     }
 
-    /**
-     * Codifica uma chave AES para Base64.
-     * 
-     * @param key Chave AES.
-     * @return Representação em Base64 da chave AES.
-     */
     public String encodeKey(SecretKey key) {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 
-    /**
-     * Decodifica uma chave AES a partir de sua representação em Base64.
-     * 
-     * @param encodedKey String Base64 da chave AES.
-     * @return Objeto SecretKey representando a chave AES.
-     */
     public SecretKey decodeKey(String encodedKey) {
         byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
         return new SecretKeySpec(decodedKey, "AES");
     }
 
-    /**
-     * Codifica um IV para Base64.
-     * 
-     * @param iv Vetor de Inicialização.
-     * @return Representação em Base64 do IV.
-     */
     public String encodeIV(IvParameterSpec iv) {
         return Base64.getEncoder().encodeToString(iv.getIV());
     }
 
-    /**
-     * Decodifica um IV a partir de sua representação em Base64.
-     * 
-     * @param encodedIV String Base64 do IV.
-     * @return Objeto IvParameterSpec representando o IV.
-     */
     public IvParameterSpec decodeIV(String encodedIV) {
         byte[] decodedIV = Base64.getDecoder().decode(encodedIV);
         return new IvParameterSpec(decodedIV);

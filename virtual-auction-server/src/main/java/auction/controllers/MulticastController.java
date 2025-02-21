@@ -48,5 +48,4 @@ public class MulticastController implements TimeListener {
     public void startListening(Consumer<String> onMessageReceived) {
         service.startListening(onMessageReceived);
     }
-    
 }

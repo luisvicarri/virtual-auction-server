@@ -1,4 +1,4 @@
-    package auction.controllers;
+package auction.controllers;
 
 import auction.models.Bid;
 import auction.services.BiddingService;
@@ -20,5 +20,4 @@ public class BiddingController {
     public boolean addBid(UUID itemId, Bid bid) {
         return service.addBid(itemId, bid);
     }
-    
 }

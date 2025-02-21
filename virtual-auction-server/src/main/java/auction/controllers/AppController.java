@@ -126,5 +126,4 @@ public final class AppController {
     public KeyController getKeyController() {
         return keyController;
     }
-
 }

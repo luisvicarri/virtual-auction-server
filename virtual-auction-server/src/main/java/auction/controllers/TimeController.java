@@ -23,5 +23,4 @@ public class TimeController {
     public void notifyTimeUpdate(Duration timeLeft) {
         service.notifyTimeUpdate(timeLeft);
     }
-    
 }

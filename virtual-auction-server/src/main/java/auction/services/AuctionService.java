@@ -215,7 +215,6 @@ public class AuctionService {
                 return;
             }
 
-            JsonUtil.printFormattedJson(message);
             Response response = mapper.readValue(message, Response.class);
             if (response.getMessage().equals("Auction closed")) {
                 response.getData().ifPresent(data -> {
